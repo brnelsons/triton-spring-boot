@@ -1,26 +1,24 @@
-package com.bnelson.triton.server;
+package com.bnelson.triton.server.dao;
 
-import com.bnelson.triton.client.ServerScriptRunnerService;
-import com.bnelson.triton.server.dao.ConnectionManager;
-import com.bnelson.triton.server.dao.GameConfig;
-import com.bnelson.triton.server.dao.GameConfigDAO;
-import com.bnelson.triton.server.dao.GameConfigDAOImpl;
 import com.bnelson.triton.shared.Game;
 import com.bnelson.triton.shared.GameAction;
 import com.bnelson.triton.shared.GameStatus;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
-public class ServerScriptRunnerServiceImpl extends RemoteServiceServlet implements ServerScriptRunnerService {
+@Service
+public class GameService{
 
-    private final ConnectionManager connectionManager;
     private final GameConfigDAO gameConfigDAO;
+    private final ConnectionManager connectionManager;
 
-    public ServerScriptRunnerServiceImpl() {
-        gameConfigDAO = new GameConfigDAOImpl();
+    @Autowired
+    public GameService(GameConfigDAO gameConfigDAO) {
+        this.gameConfigDAO = gameConfigDAO;
         connectionManager = new ConnectionManager();
         for (Map.Entry<Game, GameConfig> config : gameConfigDAO.getGameConfigMap().entrySet()) {
             Game game = config.getKey();
@@ -29,12 +27,10 @@ public class ServerScriptRunnerServiceImpl extends RemoteServiceServlet implemen
         }
     }
 
-    @Override
     public ArrayList<Game> getAllGames() {
         return new ArrayList<>(gameConfigDAO.getGameConfigMap().keySet());
     }
 
-    @Override
     public GameStatus getGameStatus(Game game) {
         try {
             if (connectionManager.isConnected(game)) {
@@ -48,7 +44,6 @@ public class ServerScriptRunnerServiceImpl extends RemoteServiceServlet implemen
         }
     }
 
-    @Override
     public HashSet<String> getGameActions(Game game) {
         GameConfig gameConfig = gameConfigDAO.getGameConfigMap().get(game);
         HashSet<String> actions = new HashSet<>();
@@ -60,17 +55,15 @@ public class ServerScriptRunnerServiceImpl extends RemoteServiceServlet implemen
         return actions;
     }
 
-    @Override
     public String getConnectionOutput(Game game) {
         return connectionManager.getConnectionOutput(game);
     }
 
-    @Override
     public void sendMessageToConnection(Game game, String message) {
         connectionManager.run(game, message);
     }
 
-    @Override
+
     public void runAction(Game game, String actionName) {
         GameConfig gameConfig = gameConfigDAO.getGameConfigMap().get(game);
         if (gameConfig != null) {

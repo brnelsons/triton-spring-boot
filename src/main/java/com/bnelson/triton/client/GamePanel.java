@@ -65,22 +65,22 @@ public class GamePanel extends Composite {
         Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
             @Override
             public boolean execute() {
-                ServerScriptRunnerService.App.getInstance().getGameStatus(game, STATUS_CALLBACK);
-                ServerScriptRunnerService.App.getInstance().getGameActions(game, ACTION_CALLBACK);
-                statusAsync = new AsyncCallback<String>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        //no op
-                    }
-
-                    @Override
-                    public void onSuccess(String result) {
-//                        if(statusAsync == this) {
-                            outputBox.setText(result);
-//                        }
-                    }
-                };
-                ServerScriptRunnerService.App.getInstance().getConnectionOutput(game, statusAsync);
+//                GameRestService.App.getInstance().getGameStatus(game, STATUS_CALLBACK);
+//                GameRestService.App.getInstance().getGameActions(game, ACTION_CALLBACK);
+//                statusAsync = new AsyncCallback<String>() {
+//                    @Override
+//                    public void onFailure(Throwable caught) {
+//                        //no op
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(String result) {
+////                        if(statusAsync == this) {
+//                            outputBox.setText(result);
+////                        }
+//                    }
+//                };
+//                GameRestService.App.getInstance().getConnectionOutput(game, statusAsync);
                 return true;
             }
         },250);
@@ -88,16 +88,16 @@ public class GamePanel extends Composite {
         sendButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                String message = inputBox.getText();
-                if(message != null && !"".equals(message)){
-                    inputBox.setText("");
-                    ServerScriptRunnerService.App.getInstance().sendMessageToConnection(game, message, new SimpleCallback() {
-                        @Override
-                        public void onSuccessOrFailure(Throwable throwable) {
-
-                        }
-                    });
-                }
+//                String message = inputBox.getText();
+//                if(message != null && !"".equals(message)){
+//                    inputBox.setText("");
+//                    GameRestService.App.getInstance().sendMessageToConnection(game, message, new SimpleCallback() {
+//                        @Override
+//                        public void onSuccessOrFailure(Throwable throwable) {
+//
+//                        }
+//                    });
+//                }
             }
         });
     }

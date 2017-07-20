@@ -2,6 +2,13 @@ package com.bnelson.triton.server.dao;
 
 import com.bnelson.triton.shared.Game;
 import com.bnelson.triton.shared.GameScriptType;
+import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -13,12 +20,25 @@ import java.util.Map;
  * <p>
  * gets game configs found at provided java property config.path
  */
+@Component
 public class GameConfigDAOImpl implements GameConfigDAO {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameConfigDAOImpl.class);
 
     private static final String GAME_CONFIG_FILE_SUFFIX = "_game.json";
     private static final String EXAMPLE_GAME_CONFIG_NAME = "example" + GAME_CONFIG_FILE_SUFFIX;
 
     private Map<Game, GameConfig> gameConfigMap;
+
+    private final Environment env;
+    private final Gson gson;
+
+    @Autowired
+    public GameConfigDAOImpl(Environment env,
+                             @Qualifier("gson") Gson gson) {
+        this.env = env;
+        this.gson = gson;
+    }
 
     @Override
     public void refresh() {
@@ -35,7 +55,7 @@ public class GameConfigDAOImpl implements GameConfigDAO {
     }
 
     private void loadAllGameConfigs() {
-        String configDirectory = System.getProperty("config.dir");
+        String configDirectory = env.getProperty("config.dir");
         if (configDirectory == null || "".equals(configDirectory)) {
             throw new IllegalArgumentException("config.dir was not provided.");
         }
@@ -48,6 +68,7 @@ public class GameConfigDAOImpl implements GameConfigDAO {
             gameConfigFolder.mkdirs();
         }
         if (!gameConfigFolder.isDirectory()) {
+            LOGGER.error("config.dir provided was not a directory");
             throw new IllegalArgumentException("config.dir provided was not a directory");
         }
 
@@ -66,7 +87,7 @@ public class GameConfigDAOImpl implements GameConfigDAO {
                     continue;
                 }
                 try {
-                    GameConfig gameConfig = Util.GSON.fromJson(new FileReader(f), GameConfig.class);
+                    GameConfig gameConfig = gson.fromJson(new FileReader(f), GameConfig.class);
                     gameConfigMap.put(gameConfig.getGame(), gameConfig);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -91,7 +112,7 @@ public class GameConfigDAOImpl implements GameConfigDAO {
         BufferedOutputStream output = null;
         try {
             output = new BufferedOutputStream(new FileOutputStream(file));
-            output.write(Util.GSON.toJson(example).getBytes(Charset.forName("UTF-8")));
+            output.write(gson.toJson(example).getBytes(Charset.forName("UTF-8")));
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -114,12 +135,12 @@ public class GameConfigDAOImpl implements GameConfigDAO {
     public void saveGameConfigs(Game game, GameConfig gameConfig) {
 
     }
-
-    /**
-     * Test loading game configs
-     */
-    public static void main(String[] args) {
-        GameConfigDAOImpl gameConfigDAO = new GameConfigDAOImpl();
-        gameConfigDAO.loadAllGameConfigs();
-    }
+//
+//    /**
+//     * Test loading game configs
+//     */
+//    public static void main(String[] args) {
+//        GameConfigDAOImpl gameConfigDAO = new GameConfigDAOImpl();
+//        gameConfigDAO.loadAllGameConfigs();
+//    }
 }

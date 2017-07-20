@@ -1,15 +1,9 @@
 package com.bnelson.triton.client;
 
-import com.bnelson.triton.shared.Game;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import org.fusesource.restygwt.client.Defaults;
-import org.gwtbootstrap3.client.ui.Column;
-import org.gwtbootstrap3.client.ui.constants.ColumnSize;
-
-import java.util.ArrayList;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>

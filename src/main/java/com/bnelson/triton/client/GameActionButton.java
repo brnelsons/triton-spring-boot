@@ -19,17 +19,17 @@ public class GameActionButton extends Button {
         addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                ServerScriptRunnerService.App.getInstance().runAction(game, actionName, new AsyncCallback<Void>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(Void result) {
-
-                    }
-                });
+//                GameRestService.App.getInstance().runAction(game, actionName, new AsyncCallback<Void>() {
+//                    @Override
+//                    public void onFailure(Throwable caught) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(Void result) {
+//
+//                    }
+//                });
             }
         });
     }

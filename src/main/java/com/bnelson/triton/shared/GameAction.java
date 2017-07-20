@@ -1,11 +1,11 @@
 package com.bnelson.triton.shared;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import java.io.Serializable;
 
 /**
  * Created by brnel on 6/21/2017.
  */
-public class GameAction implements IsSerializable{
+public class GameAction implements Serializable{
 
     private String actionName;
     private GameScriptType scriptType;
