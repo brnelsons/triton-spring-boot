@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Jar" type="JarApplication" factoryName="JAR Application">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/spring-boot-gwt-1.0.0.jar" />
+    <option name="WORKING_DIRECTORY" value="C:\Users\brnel\dev\test\spring-boot-gwt" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <envs />
+    <module name="spring-boot-gwt_main" />
+    <method />
+  </configuration>
+</component>
