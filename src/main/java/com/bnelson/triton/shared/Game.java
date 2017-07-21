@@ -1,16 +1,18 @@
 package com.bnelson.triton.shared;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
 /**
  * Created by brnel on 6/14/2017.
  */
-public class Game implements Serializable, IsSerializable{
+public class Game implements Serializable{
     private String name;
 
-    public Game(String name) {
+    @JsonCreator
+    public Game(@JsonProperty("name") String name) {
         this.name = name;
     }
 
@@ -19,6 +21,10 @@ public class Game implements Serializable, IsSerializable{
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

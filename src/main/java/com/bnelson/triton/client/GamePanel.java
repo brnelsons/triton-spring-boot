@@ -1,7 +1,7 @@
 package com.bnelson.triton.client;
 
-import com.bnelson.triton.shared.Game;
 import com.bnelson.triton.shared.GameStatus;
+import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,7 +37,7 @@ public class GamePanel extends Composite {
 
     private static GamePanelUiBinder ourUiBinder = GWT.create(GamePanelUiBinder.class);
 
-    private final Game game;
+    private final GameInfoRPC game;
 
     private AsyncCallback<String> statusAsync;
     private boolean buttonsActive = true;
@@ -55,7 +55,7 @@ public class GamePanel extends Composite {
     @UiField
     Button sendButton;
 
-    public GamePanel(final Game game) {
+    public GamePanel(final GameInfoRPC game) {
         initWidget(ourUiBinder.createAndBindUi(this));
         this.game = game;
         this.name.setText(game.getName());
@@ -65,22 +65,22 @@ public class GamePanel extends Composite {
         Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
             @Override
             public boolean execute() {
-                ServerScriptRunnerService.App.getInstance().getGameStatus(game, STATUS_CALLBACK);
-                ServerScriptRunnerService.App.getInstance().getGameActions(game, ACTION_CALLBACK);
-                statusAsync = new AsyncCallback<String>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        //no op
-                    }
-
-                    @Override
-                    public void onSuccess(String result) {
-//                        if(statusAsync == this) {
-                            outputBox.setText(result);
-//                        }
-                    }
-                };
-                ServerScriptRunnerService.App.getInstance().getConnectionOutput(game, statusAsync);
+//                GameRestService.App.getInstance().getGameStatus(game, STATUS_CALLBACK);
+//                GameRestService.App.getInstance().getGameActions(game, ACTION_CALLBACK);
+//                statusAsync = new AsyncCallback<String>() {
+//                    @Override
+//                    public void onFailure(Throwable caught) {
+//                        //no op
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(String result) {
+////                        if(statusAsync == this) {
+//                            outputBox.setText(result);
+////                        }
+//                    }
+//                };
+//                GameRestService.App.getInstance().getConnectionOutput(game, statusAsync);
                 return true;
             }
         },250);
@@ -88,16 +88,16 @@ public class GamePanel extends Composite {
         sendButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                String message = inputBox.getText();
-                if(message != null && !"".equals(message)){
-                    inputBox.setText("");
-                    ServerScriptRunnerService.App.getInstance().sendMessageToConnection(game, message, new SimpleCallback() {
-                        @Override
-                        public void onSuccessOrFailure(Throwable throwable) {
-
-                        }
-                    });
-                }
+//                String message = inputBox.getText();
+//                if(message != null && !"".equals(message)){
+//                    inputBox.setText("");
+//                    GameRestService.App.getInstance().sendMessageToConnection(game, message, new SimpleCallback() {
+//                        @Override
+//                        public void onSuccessOrFailure(Throwable throwable) {
+//
+//                        }
+//                    });
+//                }
             }
         });
     }
