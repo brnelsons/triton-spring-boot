@@ -66,11 +66,9 @@ public class MainPanel extends Composite implements HasWidgets{
             @Override
             public void onSuccess(Method method, List<GameInfoRPC> response) {
                 for(GameInfoRPC game: response){
-                    Column column = new Column(ColumnSize.LG_3, ColumnSize.MD_6, ColumnSize.SM_12);
+                    Column column = new Column(ColumnSize.LG_4, ColumnSize.MD_6, ColumnSize.SM_12);
                     column.add(new GamePanel(gameRestService, game));
-                    row.add(
-                            column
-                    );
+                    row.add(column);
                 }
             }
         });

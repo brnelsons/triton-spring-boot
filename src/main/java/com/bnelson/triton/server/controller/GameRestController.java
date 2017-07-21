@@ -7,9 +7,7 @@ import com.bnelson.triton.shared.rpc.ServerInfoRPC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,16 +31,16 @@ public class GameRestController {
     }
 
     @RequestMapping(path = "status", method = RequestMethod.GET)
-    public ResponseEntity<ServerInfoRPC> getGameStatus(GameInfoRPC infoRPC) {
-        final ServerInfoRPC rpc = gameService.getServerInfo(infoRPC);
+    public ResponseEntity<ServerInfoRPC> getGameStatus(@RequestParam(value = "gameId", required = true) String gameId) {
+        final ServerInfoRPC rpc = gameService.getServerInfo(gameId);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
                 .body(rpc);
     }
 
     @RequestMapping(path = "commands", method = RequestMethod.GET)
-    public ResponseEntity<List<CommandInfoRPC>> getGameCommands(GameInfoRPC infoRPC) {
-        final List<CommandInfoRPC> games = gameService.getCommands(infoRPC);
+    public ResponseEntity<List<CommandInfoRPC>> getGameCommands(@RequestParam(value = "gameId", required = true) String gameId) {
+        final List<CommandInfoRPC> games = gameService.getCommands(gameId);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
                 .body(games);

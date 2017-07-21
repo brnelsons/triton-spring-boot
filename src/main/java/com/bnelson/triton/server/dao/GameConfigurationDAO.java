@@ -12,10 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Manages reading and writing {@link GameConfiguration} to files.
@@ -24,7 +21,7 @@ import java.util.Map;
 public class GameConfigurationDAO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameConfigurationDAO.class);
-    private static final String FILE_SUFFIX = "_game.json";
+    private static final String FILE_SUFFIX = ".json";
     private static final String CONFIG_LOC_PROPERTY = "config.dir";
     private static final String DEFAULT_CONFIG_DIR = "./TritonConfigs/";
 
@@ -32,8 +29,8 @@ public class GameConfigurationDAO {
     private final Gson gson;
 
     private List<GameInfo> gameInfos;
-    private Map<GameInfo, ServerInfo> serverInfoMap;
-    private Map<GameInfo, List<Command>> commandsMap;
+    private Map<String, ServerInfo> gameIdServerInfoMap;
+    private Map<String, List<Command>> gameIdCommandMap;
 
     @Autowired
     public GameConfigurationDAO(Environment environment,
@@ -41,8 +38,8 @@ public class GameConfigurationDAO {
         this.environment = environment;
         this.gson = gson;
         gameInfos = new ArrayList<>();
-        serverInfoMap = new HashMap<>();
-        commandsMap = new HashMap<>();
+        gameIdServerInfoMap = new HashMap<>();
+        gameIdCommandMap = new HashMap<>();
         refresh();
     }
 
@@ -50,12 +47,12 @@ public class GameConfigurationDAO {
         return gameInfos;
     }
 
-    public ServerInfo getServerInfo(GameInfo gameInfo) {
-        return serverInfoMap.get(gameInfo);
+    public ServerInfo getServerInfo(String gameId) {
+        return gameIdServerInfoMap.get(gameId);
     }
 
-    public List<Command> getCommands(GameInfo gameInfo) {
-        return commandsMap.get(gameInfo);
+    public List<Command> getCommands(String gameId) {
+        return gameIdCommandMap.get(gameId);
     }
 
     public boolean refresh() {
@@ -84,14 +81,19 @@ public class GameConfigurationDAO {
             }
 
             gameInfos.clear();
-            serverInfoMap.clear();
-            commandsMap.clear();
+            gameIdServerInfoMap.clear();
+            gameIdCommandMap.clear();
 
             for (GameConfiguration config : gameConfigurations) {
                 GameInfo gameInfo = config.getGameInfo();
+                if(gameInfo.getId() == null){
+                    gameInfo = GameInfo.newBuilder(gameInfo)
+                            .setId(UUID.randomUUID().toString())
+                            .build();
+                }
                 gameInfos.add(gameInfo);
-                serverInfoMap.put(gameInfo, config.getServerInfo());
-                commandsMap.put(gameInfo, config.getCommands());
+                gameIdServerInfoMap.put(gameInfo.getId(), config.getServerInfo());
+                gameIdCommandMap.put(gameInfo.getId(), config.getCommands());
             }
         }catch(Exception e){
             return false;

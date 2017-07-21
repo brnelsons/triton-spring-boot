@@ -8,6 +8,7 @@ import org.fusesource.restygwt.client.RestService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import java.util.List;
 
 @Path("/rest/game")
@@ -18,12 +19,14 @@ public interface GameRestService extends RestService {
     void getGames(MethodCallback<List<GameInfoRPC>> callback);
 
     @GET
-    @Path("status")
-    void getGameStatus(GameInfoRPC gameInfoRPC, MethodCallback<GameStatusRPC> callback);
+    @Path("status/?gameId={gameId}")
+    void getGameStatus(@PathParam("gameId") final String gameId,
+                       MethodCallback<GameStatusRPC> callback);
 
     @GET
-    @Path("commands")
-    void getGameCommands(GameInfoRPC gameInfoRPC, MethodCallback<List<CommandInfoRPC>> callback);
+    @Path("commands/?gameId={gameId}")
+    void getGameCommands(@PathParam("gameId") final String gameId,
+                         MethodCallback<List<CommandInfoRPC>> callback);
 
     @GET
     @Path("refresh")

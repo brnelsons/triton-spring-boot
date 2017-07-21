@@ -16,6 +16,7 @@ public class ConversionUtil {
 
     public static GameInfoRPC convert(GameInfo info){
         GameInfoRPC rpc = new GameInfoRPC();
+        rpc.setId(info.getId());
         rpc.setName(info.getName());
         rpc.setDescription(info.getDescription());
         return rpc;
@@ -23,6 +24,7 @@ public class ConversionUtil {
 
     public static GameInfo convert(GameInfoRPC rpc){
         return GameInfo.newBuilder()
+                .setId(rpc.getId())
                 .setName(rpc.getName())
                 .setDescription(rpc.getDescription())
                 .build();
@@ -37,7 +39,7 @@ public class ConversionUtil {
     public static CommandInfoRPC convert(Command command) {
         CommandInfoRPC infoRPC = new CommandInfoRPC();
         infoRPC.setName(command.getName());
-        infoRPC.setName(command.getDescription());
+        infoRPC.setDescription(command.getDescription());
         return infoRPC;
     }
 

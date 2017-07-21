@@ -34,13 +34,13 @@ public class GameService{
         return rpcs;
     }
 
-    public ServerInfoRPC getServerInfo(GameInfoRPC rpc) {
-        ServerInfo serverInfo = gameConfigDAO.getServerInfo(ConversionUtil.convert(rpc));
+    public ServerInfoRPC getServerInfo(String gameId) {
+        ServerInfo serverInfo = gameConfigDAO.getServerInfo(gameId);
         return ConversionUtil.convert(serverInfo);
     }
 
-    public ArrayList<CommandInfoRPC> getCommands(GameInfoRPC rpc){
-        List<Command> commands = gameConfigDAO.getCommands(ConversionUtil.convert(rpc));
+    public ArrayList<CommandInfoRPC> getCommands(String gameId){
+        List<Command> commands = gameConfigDAO.getCommands(gameId);
         ArrayList<CommandInfoRPC> rpcs = new ArrayList<>(commands.size());
         for(Command cmd : commands){
             rpcs.add(ConversionUtil.convert(cmd));
@@ -57,7 +57,7 @@ public class GameService{
         return GameStatusRPC.UNKNOWN;
     }
 
-    public boolean runCommand(GameInfoRPC rpc, String commandName){
+    public boolean runCommand(String gameId, String commandName){
         //TODO implement running commands
         return false;
     }
