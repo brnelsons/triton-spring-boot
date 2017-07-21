@@ -15,6 +15,6 @@
 
     <!-- Specify the app servlets.                   -->
     <servlet path='/ServerScriptRunnerService'
-             class='com.bnelson.triton.server.dao.GameService'/>
+             class='com.bnelson.triton.server.service.GameService'/>
 
 </module>

@@ -1,6 +1,8 @@
-package com.bnelson.triton.server.dao;
+package com.bnelson.triton.server.controller;
 
+import com.bnelson.triton.server.service.GameService;
 import com.bnelson.triton.shared.Game;
+import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +24,8 @@ public class GameRestController {
     private GameService gameService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Game>> getGames() {
-        final ArrayList<Game> games = gameService.getAllGames();
+    public ResponseEntity<List<GameInfoRPC>> getGames() {
+        final ArrayList<GameInfoRPC> games = gameService.getAllGames();
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
                 .body(games);

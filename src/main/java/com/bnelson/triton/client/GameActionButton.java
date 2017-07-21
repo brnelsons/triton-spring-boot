@@ -1,9 +1,8 @@
 package com.bnelson.triton.client;
 
-import com.bnelson.triton.shared.Game;
+import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.gwtbootstrap3.client.ui.Button;
 
 /**
@@ -11,7 +10,7 @@ import org.gwtbootstrap3.client.ui.Button;
  */
 public class GameActionButton extends Button {
 
-    public GameActionButton(final Game game,
+    public GameActionButton(final GameInfoRPC game,
                             final String actionName) {
         super();
         setText(actionName);

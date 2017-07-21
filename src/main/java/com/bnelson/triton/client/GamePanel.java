@@ -1,7 +1,7 @@
 package com.bnelson.triton.client;
 
-import com.bnelson.triton.shared.Game;
 import com.bnelson.triton.shared.GameStatus;
+import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,7 +37,7 @@ public class GamePanel extends Composite {
 
     private static GamePanelUiBinder ourUiBinder = GWT.create(GamePanelUiBinder.class);
 
-    private final Game game;
+    private final GameInfoRPC game;
 
     private AsyncCallback<String> statusAsync;
     private boolean buttonsActive = true;
@@ -55,7 +55,7 @@ public class GamePanel extends Composite {
     @UiField
     Button sendButton;
 
-    public GamePanel(final Game game) {
+    public GamePanel(final GameInfoRPC game) {
         initWidget(ourUiBinder.createAndBindUi(this));
         this.game = game;
         this.name.setText(game.getName());

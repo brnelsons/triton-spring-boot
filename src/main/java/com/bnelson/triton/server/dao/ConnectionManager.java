@@ -1,7 +1,6 @@
 package com.bnelson.triton.server.dao;
 
 import com.bnelson.triton.shared.Game;
-import com.bnelson.triton.shared.GameAction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,31 +52,31 @@ public class ConnectionManager {
         return false;
     }
 
-    public boolean run(Game game, GameAction action){
-        switch (action.getScriptType()) {
-            case CONNECTION_COMMAND:
-                run(game, action.getScript());
-                return true;
-            case LOCAL_SCRIPT:
-                try {
-                    Process exec = Runtime.getRuntime().exec("cmd /c \"" + action.getScript() + "\"");
-                    BufferedReader in = new BufferedReader(new InputStreamReader(exec.getInputStream()));
-                    while (exec.isAlive()) {
-                        if (in.ready()) {
-                            String line = in.readLine();
-                            if (line != null && !"".equals(line)) {
-                                gameConnections.get(game).appendToOutput(line);
-                            }
-                        }
-                    }
-                    gameConnections.get(game).appendToOutput(action.getActionName() + " has completed!");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return true;
-            default:
-                throw new IllegalArgumentException("Unknown GameActionType: " + action.getActionName());
-        }
-    }
+//    public boolean run(Game game, GameAction action){
+//        switch (action.getScriptType()) {
+//            case CONNECTION_COMMAND:
+//                run(game, action.getScript());
+//                return true;
+//            case LOCAL_SCRIPT:
+//                try {
+//                    Process exec = Runtime.getRuntime().exec("cmd /c \"" + action.getScript() + "\"");
+//                    BufferedReader in = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+//                    while (exec.isAlive()) {
+//                        if (in.ready()) {
+//                            String line = in.readLine();
+//                            if (line != null && !"".equals(line)) {
+//                                gameConnections.get(game).appendToOutput(line);
+//                            }
+//                        }
+//                    }
+//                    gameConnections.get(game).appendToOutput(action.getActionName() + " has completed!");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                return true;
+//            default:
+//                throw new IllegalArgumentException("Unknown GameActionType: " + action.getActionName());
+//        }
+//    }
 
 }

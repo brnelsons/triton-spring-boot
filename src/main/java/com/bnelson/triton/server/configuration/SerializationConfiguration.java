@@ -1,4 +1,4 @@
-package com.bnelson.triton.server.dao;
+package com.bnelson.triton.server.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
