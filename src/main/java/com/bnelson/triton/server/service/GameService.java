@@ -5,7 +5,9 @@ import com.bnelson.triton.server.pojo.Command;
 import com.bnelson.triton.server.pojo.GameInfo;
 import com.bnelson.triton.server.pojo.ServerInfo;
 import com.bnelson.triton.server.util.ConversionUtil;
+import com.bnelson.triton.shared.rpc.CommandInfoRPC;
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
+import com.bnelson.triton.shared.rpc.GameStatusRPC;
 import com.bnelson.triton.shared.rpc.ServerInfoRPC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,18 +39,22 @@ public class GameService{
         return ConversionUtil.convert(serverInfo);
     }
 
-    public ArrayList<String> getCommands(GameInfoRPC rpc){
+    public ArrayList<CommandInfoRPC> getCommands(GameInfoRPC rpc){
         List<Command> commands = gameConfigDAO.getCommands(ConversionUtil.convert(rpc));
-        ArrayList<String> commandNames = new ArrayList<>(commands.size());
+        ArrayList<CommandInfoRPC> rpcs = new ArrayList<>(commands.size());
         for(Command cmd : commands){
-            commandNames.add(cmd.getName());
+            rpcs.add(ConversionUtil.convert(cmd));
         }
-        return commandNames;
+        return rpcs;
     }
 
-    public String getServerStatus(GameInfoRPC rpc){
+    public boolean refresh(){
+        return gameConfigDAO.refresh();
+    }
+
+    public GameStatusRPC getServerStatus(GameInfoRPC rpc){
         //TODO implement server status
-        return null;
+        return GameStatusRPC.UNKNOWN;
     }
 
     public boolean runCommand(GameInfoRPC rpc, String commandName){

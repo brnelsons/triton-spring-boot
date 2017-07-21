@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by brnel on 7/20/2017.
+ * Manages reading and writing {@link GameConfiguration} to files.
  */
 @Component
 public class GameConfigurationDAO {
@@ -26,6 +26,7 @@ public class GameConfigurationDAO {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameConfigurationDAO.class);
     private static final String FILE_SUFFIX = "_game.json";
     private static final String CONFIG_LOC_PROPERTY = "config.dir";
+    private static final String DEFAULT_CONFIG_DIR = "./TritonConfigs/";
 
     private final Environment environment;
     private final Gson gson;
@@ -57,34 +58,45 @@ public class GameConfigurationDAO {
         return commandsMap.get(gameInfo);
     }
 
-    public void refresh() {
-        String configLocation = environment.getProperty(CONFIG_LOC_PROPERTY);
-        Preconditions.checkNotNull(
-                configLocation,
-                CONFIG_LOC_PROPERTY + " was not found, please provide using --config.dir=/Users/<user-name>/Documents/Triton-Configs/");
-        File configFile = new File(configLocation);
-        if (!FileReaderWriterUtil.exists(configFile, true) || configFile.list().length == 0) {
-            createGameConfigurationfile(configLocation + ExampleConfigs.EXAMPLE_FILE_NAME, ExampleConfigs.getExampleConfig());
-        }
-        if (!configFile.isDirectory()) {
-            throw new IllegalArgumentException(CONFIG_LOC_PROPERTY + " provided was not directory at " + configLocation);
-        }
-        List<GameConfiguration> gameConfigurations = new ArrayList<>();
-        File[] files = configFile.listFiles((dir, name) -> name.endsWith(FILE_SUFFIX));
-        if (files != null && files.length > 0) {
-            for (File f : files) {
-                if (f == null) {
-                    continue;
-                }
-                gameConfigurations.add(FileReaderWriterUtil.readFromFile(f, gson, GameConfiguration.class));
+    public boolean refresh() {
+        try {
+            String configLocation = environment.getProperty(CONFIG_LOC_PROPERTY, DEFAULT_CONFIG_DIR);
+            Preconditions.checkNotNull(
+                    configLocation,
+                    CONFIG_LOC_PROPERTY + " was not found, please provide using --config.dir=/Users/<user-name>/Documents/Triton-Configs/");
+            File configFile = new File(configLocation);
+            if (!FileReaderWriterUtil.exists(configFile, true)
+                    || configFile.list().length == 0) {
+                createGameConfigurationfile(configLocation + ExampleConfigs.EXAMPLE_FILE_NAME, ExampleConfigs.getExampleConfig());
             }
+            if (!configFile.isDirectory()) {
+                throw new IllegalArgumentException(CONFIG_LOC_PROPERTY + " provided was not directory at " + configLocation);
+            }
+            List<GameConfiguration> gameConfigurations = new ArrayList<>();
+            File[] files = configFile.listFiles((dir, name) -> name.endsWith(FILE_SUFFIX));
+            if (files != null && files.length > 0) {
+                for (File f : files) {
+                    if (f == null) {
+                        continue;
+                    }
+                    gameConfigurations.add(FileReaderWriterUtil.readFromFile(f, gson, GameConfiguration.class));
+                }
+            }
+
+            gameInfos.clear();
+            serverInfoMap.clear();
+            commandsMap.clear();
+
+            for (GameConfiguration config : gameConfigurations) {
+                GameInfo gameInfo = config.getGameInfo();
+                gameInfos.add(gameInfo);
+                serverInfoMap.put(gameInfo, config.getServerInfo());
+                commandsMap.put(gameInfo, config.getCommands());
+            }
+        }catch(Exception e){
+            return false;
         }
-        for (GameConfiguration config : gameConfigurations) {
-            GameInfo gameInfo = config.getGameInfo();
-            gameInfos.add(gameInfo);
-            serverInfoMap.put(gameInfo, config.getServerInfo());
-            commandsMap.put(gameInfo, config.getCommands());
-        }
+        return true;
     }
 
     public void createGameConfigurationfile(String filename, GameConfiguration gameConfiguration){

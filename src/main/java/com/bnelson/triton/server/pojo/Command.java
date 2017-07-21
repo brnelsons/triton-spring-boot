@@ -36,6 +36,10 @@ public class Command implements Serializable {
         return type;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public String getValue() {
         return value;
     }

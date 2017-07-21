@@ -1,9 +1,13 @@
 package com.bnelson.triton.server.util;
 
+import com.bnelson.triton.server.pojo.Command;
 import com.bnelson.triton.server.pojo.GameInfo;
 import com.bnelson.triton.server.pojo.ServerInfo;
+import com.bnelson.triton.shared.rpc.CommandInfoRPC;
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.bnelson.triton.shared.rpc.ServerInfoRPC;
+
+import java.util.ArrayList;
 
 /**
  * Created by brnel on 7/20/2017.
@@ -28,6 +32,13 @@ public class ConversionUtil {
         ServerInfoRPC rpc = new ServerInfoRPC();
         rpc.setAddress(info.getAddress());
         return rpc;
+    }
+
+    public static CommandInfoRPC convert(Command command) {
+        CommandInfoRPC infoRPC = new CommandInfoRPC();
+        infoRPC.setName(command.getName());
+        infoRPC.setName(command.getDescription());
+        return infoRPC;
     }
 
 //    we do not expose the server info to the client so this will have missing fields.

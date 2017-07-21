@@ -1,7 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
-    <b:Panel>
+    <b:Panel ui:field="panel">
         <b:PanelHeader>
             <g:Label ui:field="name" text="Some Game"/>
             <g:Label ui:field="status" text="Some Game Status"/>
@@ -11,9 +11,9 @@
         </b:PanelBody>
         <b:PanelFooter>
             <g:HorizontalPanel ui:field="buttons"/>
-            <g:Label text="Custom Command"/>
-            <g:TextBox ui:field="inputBox"/>
-            <b:Button ui:field="sendButton" text="Send"/>
+            <!--<g:Label text="Custom Command"/>-->
+            <!--<g:TextBox ui:field="inputBox"/>-->
+            <!--<b:Button ui:field="sendButton" text="Send"/>-->
         </b:PanelFooter>
     </b:Panel>
 </ui:UiBinder>
