@@ -1,7 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:t='urn:import:com.bnelson.triton.client'
-             xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
+             xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+             xmlns:widget="urn:import:com.bnelson.triton.client.widget">
     <ui:style>
         .textArea{
             width: 100% !important;
@@ -17,7 +18,7 @@
             <g:TextArea ui:field="outputBox" height="150" readOnly="true" addStyleNames="{style.textArea}"/>
         </b:PanelBody>
         <b:PanelFooter>
-            <t:CommandGroup ui:field="commandGroup"/>
+            <widget:CommandGroup ui:field="commandGroup"/>
             <!--<g:Label text="Custom Command"/>-->
             <!--<g:TextBox ui:field="inputBox"/>-->
             <!--<b:Button ui:field="sendButton" text="Send"/>-->

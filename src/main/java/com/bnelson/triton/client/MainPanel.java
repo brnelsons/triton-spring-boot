@@ -1,6 +1,7 @@
 package com.bnelson.triton.client;
 
 import com.bnelson.triton.client.service.GameRestService;
+import com.bnelson.triton.client.widget.GamePanel;
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

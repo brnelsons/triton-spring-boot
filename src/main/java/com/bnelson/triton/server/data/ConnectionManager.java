@@ -1,16 +1,14 @@
-package com.bnelson.triton.server.dao;
+package com.bnelson.triton.server.data;
 
 import com.bnelson.triton.shared.Game;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by brnel on 6/16/2017.
  */
+@Deprecated
 public class ConnectionManager {
     private Map<Game, TerminalConnection> gameConnections;
 

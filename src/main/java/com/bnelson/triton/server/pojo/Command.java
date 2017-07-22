@@ -10,8 +10,7 @@ import java.io.Serializable;
  */
 public class Command implements Serializable {
 
-    @SuppressWarnings("WeakerAccess")
-    enum Type{
+    public enum Type{
         LOCAL_SCRIPT,
         TELNET
     }

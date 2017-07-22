@@ -1,6 +1,10 @@
-package com.bnelson.triton.server.dao;
+package com.bnelson.triton.server.data;
 
-import com.bnelson.triton.server.pojo.*;
+import com.bnelson.triton.server.pojo.Command;
+import com.bnelson.triton.server.pojo.ExampleConfigs;
+import com.bnelson.triton.server.pojo.GameConfiguration;
+import com.bnelson.triton.server.pojo.GameInfo;
+import com.bnelson.triton.server.pojo.ServerInfo;
 import com.bnelson.triton.server.util.FileReaderWriterUtil;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
@@ -53,6 +57,16 @@ public class GameConfigurationDAO {
 
     public List<Command> getCommands(String gameId) {
         return gameIdCommandMap.get(gameId);
+    }
+
+    public Command getCommandByName(String gameId, String commandName) {
+        List<Command> commands = gameIdCommandMap.get(gameId);
+        for(Command cmd : commands){
+            if(cmd.getName().equals(commandName)){
+                return cmd;
+            }
+        }
+        return null;
     }
 
     public boolean refresh() {

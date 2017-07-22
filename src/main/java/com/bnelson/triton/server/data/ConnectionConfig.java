@@ -1,4 +1,4 @@
-package com.bnelson.triton.server.dao;
+package com.bnelson.triton.server.data;
 
 import java.io.Serializable;
 

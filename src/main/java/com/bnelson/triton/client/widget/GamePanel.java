@@ -1,8 +1,8 @@
-package com.bnelson.triton.client;
+package com.bnelson.triton.client.widget;
 
 import com.bnelson.triton.client.service.GameRestService;
 import com.bnelson.triton.shared.rpc.CommandInfoRPC;
-import com.bnelson.triton.shared.rpc.GameStatusRPC;
+import com.bnelson.triton.shared.rpc.ConnectionStatusRPC;
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -12,16 +12,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
-import org.gwtbootstrap3.client.ui.InputGroup;
 import org.gwtbootstrap3.client.ui.Panel;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by brnel on 6/15/2017.
  */
 public class GamePanel extends Composite {
     interface GamePanelUiBinder extends UiBinder<Panel, GamePanel> {}
+
     private static GamePanelUiBinder ourUiBinder = GWT.create(GamePanelUiBinder.class);
 
     private final GameRestService gameService;
@@ -42,7 +43,7 @@ public class GamePanel extends Composite {
         initWidget(ourUiBinder.createAndBindUi(this));
         this.gameService = gameService;
         this.name.setText(game.getName());
-        this.status.setText(GameStatusRPC.UNKNOWN.name());
+        this.status.setText(ConnectionStatusRPC.UNKNOWN.name());
 
         gameService.getGameCommands(game.getId(), new MethodCallback<List<CommandInfoRPC>>() {
             @Override
@@ -56,35 +57,57 @@ public class GamePanel extends Composite {
             }
         });
 
+//        gameService.get
+
         //set update schedule
         Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
             @Override
             public boolean execute() {
-                gameService.getGameStatus(game.getId(), new MethodCallback<GameStatusRPC>() {
-                    @Override
-                    public void onFailure(Method method, Throwable exception) {
-                        //todo disable buttons change color of the border for panel
-                    }
+                gameService.getGameStatus(
+                        game.getId(),
+                        new MethodCallback<ConnectionStatusRPC>() {
+                            @Override
+                            public void onFailure(Method method, Throwable exception) {
+                                //todo disable buttons change color of the border for panel
+                            }
 
-                    @Override
-                    public void onSuccess(Method method, GameStatusRPC response) {
-                        handleStatusChange(response);
-                    }
-                });
+                            @Override
+                            public void onSuccess(Method method, ConnectionStatusRPC response) {
+                                handleStatusChange(response);
+                            }
+                        });
+                gameService.getConnectionOutput(
+                        game.getId(),
+                        new MethodCallback<String>() {
+                            @Override
+                            public void onFailure(Method method, Throwable exception) {
+                                //todo
+                            }
+
+                            @Override
+                            public void onSuccess(Method method, String response) {
+                                handleConnectionOutput(response);
+                            }
+                        });
                 return true;
             }
-        }, 250);
+        }, 5000);
+    }
+
+    private void handleConnectionOutput(String response) {
+        String current = outputBox.getText();
+        outputBox.setText(current + response);
     }
 
     private void updateCommandButtons(List<CommandInfoRPC> response) {
         commandGroup.clear();
-        for(CommandInfoRPC infoRPC : response){
+        for (CommandInfoRPC infoRPC : response) {
             commandGroup.add(infoRPC);
         }
     }
 
-    private void handleStatusChange(GameStatusRPC response) {
-        if(response != null) {
+    private void handleStatusChange(ConnectionStatusRPC response) {
+        if (response != null) {
             this.status.setText(response.name());
             switch (response) {
                 case RUNNING:

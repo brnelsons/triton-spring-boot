@@ -1,4 +1,4 @@
-package com.bnelson.triton.client;
+package com.bnelson.triton.client.widget;
 
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.google.gwt.event.dom.client.ClickEvent;
