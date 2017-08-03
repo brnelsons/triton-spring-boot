@@ -1,9 +1,11 @@
 package com.bnelson.triton.server.util;
 
 import com.bnelson.triton.server.pojo.Command;
+import com.bnelson.triton.server.pojo.ExternalLink;
 import com.bnelson.triton.server.pojo.GameInfo;
 import com.bnelson.triton.server.pojo.ServerInfo;
 import com.bnelson.triton.shared.rpc.CommandInfoRPC;
+import com.bnelson.triton.shared.rpc.ExternalLinkRPC;
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.bnelson.triton.shared.rpc.ServerInfoRPC;
 
@@ -41,6 +43,14 @@ public class ConversionUtil {
         infoRPC.setName(command.getName());
         infoRPC.setDescription(command.getDescription());
         return infoRPC;
+    }
+
+    public static ExternalLinkRPC convert(ExternalLink externalLink){
+        return new ExternalLinkRPC(externalLink.getName(), externalLink.getUrl());
+    }
+
+    public static ExternalLink convert(ExternalLinkRPC externalLink){
+        return new ExternalLink(externalLink.getName(), externalLink.getUrl());
     }
 
 //    we do not expose the server info to the client so this will have missing fields.

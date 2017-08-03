@@ -5,7 +5,8 @@ package com.bnelson.triton.server.pojo;
  */
 public class ExampleConfigs {
 
-    private ExampleConfigs() {}
+    private ExampleConfigs() {
+    }
 
     public static final String EXAMPLE_FILE_NAME = "example_game.json";
 
@@ -26,6 +27,11 @@ public class ExampleConfigs {
                                 .setType(Command.Type.LOCAL_SCRIPT)
                                 .setDescription("Starts the server")
                                 .setValue("cmd /c \"C:\\\\Commands\\start_server.bat\"")
+                                .build())
+                .addLink(
+                        ExternalLink.newBuilder()
+                                .setName("Server Manager")
+                                .setUrl("http://localhost:8080")
                                 .build())
                 .build();
     }

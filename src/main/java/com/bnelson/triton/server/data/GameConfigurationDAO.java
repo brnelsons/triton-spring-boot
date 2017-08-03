@@ -2,6 +2,7 @@ package com.bnelson.triton.server.data;
 
 import com.bnelson.triton.server.pojo.Command;
 import com.bnelson.triton.server.pojo.ExampleConfigs;
+import com.bnelson.triton.server.pojo.ExternalLink;
 import com.bnelson.triton.server.pojo.GameConfiguration;
 import com.bnelson.triton.server.pojo.GameInfo;
 import com.bnelson.triton.server.pojo.ServerInfo;
@@ -35,6 +36,7 @@ public class GameConfigurationDAO {
     private List<GameInfo> gameInfos;
     private Map<String, ServerInfo> gameIdServerInfoMap;
     private Map<String, List<Command>> gameIdCommandMap;
+    private Map<String, List<ExternalLink>> gameIdLinkMap;
 
     @Autowired
     public GameConfigurationDAO(Environment environment,
@@ -44,6 +46,7 @@ public class GameConfigurationDAO {
         gameInfos = new ArrayList<>();
         gameIdServerInfoMap = new HashMap<>();
         gameIdCommandMap = new HashMap<>();
+        gameIdLinkMap = new HashMap<>();
         refresh();
     }
 
@@ -59,10 +62,14 @@ public class GameConfigurationDAO {
         return gameIdCommandMap.get(gameId);
     }
 
+    public List<ExternalLink> getExternalLinks(String gameId){
+        return gameIdLinkMap.get(gameId);
+    }
+
     public Command getCommandByName(String gameId, String commandName) {
         List<Command> commands = gameIdCommandMap.get(gameId);
-        for(Command cmd : commands){
-            if(cmd.getName().equals(commandName)){
+        for (Command cmd : commands) {
+            if (cmd.getName().equals(commandName)) {
                 return cmd;
             }
         }
@@ -97,29 +104,32 @@ public class GameConfigurationDAO {
             gameInfos.clear();
             gameIdServerInfoMap.clear();
             gameIdCommandMap.clear();
+            gameIdLinkMap.clear();
 
             for (GameConfiguration config : gameConfigurations) {
                 GameInfo gameInfo = config.getGameInfo();
-                if(gameInfo.getId() == null){
+                if (gameInfo.getId() == null) {
                     gameInfo = GameInfo.newBuilder(gameInfo)
                             .setId(UUID.randomUUID().toString())
                             .build();
                 }
                 gameInfos.add(gameInfo);
+                gameIdLinkMap.put(gameInfo.getId(), config.getExternalLinks());
                 gameIdServerInfoMap.put(gameInfo.getId(), config.getServerInfo());
                 gameIdCommandMap.put(gameInfo.getId(), config.getCommands());
             }
-        }catch(Exception e){
+        } catch (Exception e) {
+            LOGGER.error("DAO could not parse configs", e);
             return false;
         }
         return true;
     }
 
-    public void createGameConfigurationfile(String filename, GameConfiguration gameConfiguration){
+    public void createGameConfigurationfile(String filename, GameConfiguration gameConfiguration) {
         File newConfig = new File(filename);
-        if(!FileReaderWriterUtil.exists(newConfig, false)){
+        if (!FileReaderWriterUtil.exists(newConfig, false)) {
             FileReaderWriterUtil.writeToFile(newConfig, gson, gameConfiguration);
-        }else{
+        } else {
             LOGGER.error("Could not create file at {}, it either already exists or we cannot create it!");
         }
     }

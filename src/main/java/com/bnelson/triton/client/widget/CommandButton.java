@@ -2,6 +2,8 @@ package com.bnelson.triton.client.widget;
 
 import com.bnelson.triton.shared.rpc.CommandInfoRPC;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -24,4 +26,9 @@ public class CommandButton extends Composite {
         initWidget(ourUiBinder.createAndBindUi(this));
         button.setText(commandInfoRPC.getName());
     }
+
+    public void addClickHandler(ClickHandler clickHandler){
+         button.addClickHandler(clickHandler);
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.bnelson.triton.server.script;
 
+import com.bnelson.triton.server.data.OutputDelegate;
+import com.bnelson.triton.server.data.OutputReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,35 +18,30 @@ public class BatchScriptRunner implements Runnable {
 
     private final String command;
 
-    private final StringBuilder output;
+    private BufferedReader input;
 
     public BatchScriptRunner(String command) {
         this.command = command;
-        output = new StringBuilder();
     }
 
     @Override
     public void run() {
-        ProcessBuilder pb = new ProcessBuilder(command);
+        ProcessBuilder pb = ScriptUtil.getProcessBuilder(command);
         pb.redirectInput();
+        pb.redirectOutput();
         try {
             Process process = pb.start();
-            BufferedReader input = new BufferedReader(
+            input = new BufferedReader(
                     new InputStreamReader(process.getInputStream())
             );
-            String line;
-            while((line = input.readLine()) != null){
-                if(!line.isEmpty()){
-                    output.append(line).append("\n");
-                }
-            }
         } catch (IOException e) {
             LOGGER.error("something bad happened while running the script {}" ,command, e);
         }
     }
 
-    public String getOutput(){
-        return output.toString();
+    public OutputDelegate.Output getOutput(){
+        return new OutputReader(input);
     }
+
 
 }

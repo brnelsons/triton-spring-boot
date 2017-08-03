@@ -2,11 +2,13 @@ package com.bnelson.triton.client.service;
 
 import com.bnelson.triton.shared.rpc.CommandInfoRPC;
 import com.bnelson.triton.shared.rpc.ConnectionStatusRPC;
+import com.bnelson.triton.shared.rpc.ExternalLinkRPC;
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import java.util.List;
@@ -29,12 +31,17 @@ public interface GameRestService extends RestService {
                          MethodCallback<List<CommandInfoRPC>> callback);
 
     @GET
-    @Path("connection/output/?gameId={gameId}")
-    void getConnectionOutput(@PathParam("gameId") final String gameId,
-                             MethodCallback<String> callback);
+    @Path("externalLinks/?gameId={gameId}")
+    void getExternalLinks(@PathParam("gameId") final String gameId,
+                          MethodCallback<List<ExternalLinkRPC>> callback);
 
     @GET
-    @Path("commands/?gameId={gameId}&commandName={commandName}")
+    @Path("output/?gameId={gameId}")
+    void getGameOutput(@PathParam("gameId") final String gameId,
+                       MethodCallback<String> callback);
+
+    @POST
+    @Path("commands/run/?gameId={gameId}&commandName={commandName}")
     void runCommand(@PathParam("gameId") final String gameId,
                     @PathParam("commandName") final String commandName,
                     MethodCallback<String> callback);

@@ -1,7 +1,5 @@
 package com.bnelson.triton.server.pojo;
 
-import com.google.common.base.Preconditions;
-
 import java.io.Serializable;
 
 /**
@@ -12,11 +10,17 @@ public class ServerInfo implements Serializable {
     private final String username;
     private final String password;
     private final String address;
+    private final String localProcessName;
     private final int port;
 
-    public ServerInfo(String username, String password, String address, int port) {
+    public ServerInfo(String username,
+                      String password,
+                      String address,
+                      int port,
+                      String localProcessName) {
         this.username = username;
         this.password = password;
+        this.localProcessName = localProcessName;
         this.address = address;
         this.port = port;
     }
@@ -33,6 +37,10 @@ public class ServerInfo implements Serializable {
         return address;
     }
 
+    public String getLocalProcessName() {
+        return localProcessName;
+    }
+
     public int getPort() {
         return port;
     }
@@ -46,6 +54,7 @@ public class ServerInfo implements Serializable {
         private String username;
         private String password;
         private String address;
+        private String localProcessName;
         private int port;
 
         private Builder(){}
@@ -68,10 +77,16 @@ public class ServerInfo implements Serializable {
             this.address = address;
             return this;
         }
+        public Builder setLocalProcessName(String localProcessName) {
+            this.localProcessName = localProcessName;
+            return this;
+        }
 
         public ServerInfo build(){
-            Preconditions.checkNotNull(address, "server address cannot be null!");
-            return new ServerInfo(username, password, address, port);
+            if(address == null && localProcessName == null){
+                throw new IllegalArgumentException("address OR localProcessName must be provided!");
+            }
+            return new ServerInfo(username, password, address, port, localProcessName);
         }
     }
 
@@ -85,7 +100,8 @@ public class ServerInfo implements Serializable {
         if (port != that.port) return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
         if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        return address != null ? address.equals(that.address) : that.address == null;
+        if (address != null ? !address.equals(that.address) : that.address != null) return false;
+        return localProcessName != null ? localProcessName.equals(that.localProcessName) : that.localProcessName == null;
 
     }
 
@@ -94,6 +110,7 @@ public class ServerInfo implements Serializable {
         int result = username != null ? username.hashCode() : 0;
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (localProcessName != null ? localProcessName.hashCode() : 0);
         result = 31 * result + port;
         return result;
     }

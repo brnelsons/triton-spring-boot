@@ -74,24 +74,24 @@ public class ConnectionManager {
         return true;
     }
 
-    public String getConnectionOutput(String gameId) {
-        SocketConnection connection = get(gameId);
-        if (connection != null) {
-            try {
-                if (!connection.isConnected()) {
-                    //try to connect
-                    LOGGER.info("Attempting to connect connection at {}:{}", connection.getUrl(), connection.getPort());
-                    connection.connect();
-                }
-                if (connection.isConnected()) {
-                    return connection.read();
-                }
-            } catch (IOException e) {
-                LOGGER.error("problem reading from the connection", e);
-            }
-        }
-        return "Error reading the connection!";
-    }
+//    public String getConnectionOutput(String gameId) {
+//        SocketConnection connection = get(gameId);
+//        if (connection != null) {
+//            try {
+//                if (!connection.isConnected()) {
+//                    //try to connect
+//                    LOGGER.info("Attempting to connect connection at {}:{}", connection.getUrl(), connection.getPort());
+//                    connection.connect();
+//                }
+//                if (connection.isConnected()) {
+//                    return connection.read();
+//                }
+//            } catch (IOException e) {
+//                LOGGER.error("problem reading from the connection", e);
+//            }
+//        }
+//        return "Error reading the connection!";
+//    }
 
     public ConnectionStatusRPC getConnectionStatus(String gameId) {
         SocketConnection connection = get(gameId);

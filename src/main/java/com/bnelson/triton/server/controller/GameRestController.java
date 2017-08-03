@@ -1,12 +1,13 @@
 package com.bnelson.triton.server.controller;
 
 import com.bnelson.triton.server.service.GameService;
-import com.bnelson.triton.shared.rpc.CommandInfoRPC;
-import com.bnelson.triton.shared.rpc.GameInfoRPC;
-import com.bnelson.triton.shared.rpc.ConnectionStatusRPC;
-import com.bnelson.triton.shared.rpc.ServerInfoRPC;
+import com.bnelson.triton.shared.rpc.*;
+import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/rest/game")
 public class GameRestController {
+    public static final Logger LOGGER = LoggerFactory.getLogger(GameRestController.class);
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private Gson gson;
 
     /**
      * **** Get All Games ****
@@ -56,25 +61,34 @@ public class GameRestController {
     }
 
     /**
-     * **** Get Connection output for game ****
+     * **** Get All External Links for Game ****
      */
-    @RequestMapping(path = "connection/output", method = RequestMethod.GET)
-    public ResponseEntity<String> getConnectionOutput(@RequestParam(value = "gameId", required = true) String gameId) {
+    @RequestMapping(path = "externalLinks", method = RequestMethod.GET)
+    public ResponseEntity<List<ExternalLinkRPC>> getExternalLinks(@RequestParam(value = "gameId", required = true) String gameId) {
+        final List<ExternalLinkRPC> games = gameService.getExternalLinks(gameId);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
-                .body(gameService.getConnectionOutput(gameId));
+                .body(games);
+    }
+
+    /**
+     * **** Get Connection output for game ****
+     */
+    @RequestMapping(path = "output", method = RequestMethod.GET)
+    public ResponseEntity<String> getGameOutput(@RequestParam(value = "gameId", required = true) String gameId) {
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
+                .body(escapeJsonString(gameService.getGameOutput(gameId)));
     }
 
     /**
      * **** Run command for game ****
      */
-    @RequestMapping(path = "commands/run", method = RequestMethod.GET)
-    public ResponseEntity<List<CommandInfoRPC>> runCommand(@RequestParam(value = "gameId", required = true) String gameId,
-                                                           @RequestParam(value = "commandName", required = true) String commandName) {
-        final List<CommandInfoRPC> games = gameService.getCommands(gameId);
-        return ResponseEntity.ok()
-                .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
-                .body(games);
+    @RequestMapping(path = "commands/run", method = RequestMethod.POST)
+    public ResponseEntity<String> runCommand(@RequestParam(value = "gameId", required = true) String gameId,
+                                             @RequestParam(value = "commandName", required = true) String commandName) {
+        gameService.runCommand(gameId, commandName);
+        return new ResponseEntity<>(HttpStatus.OK);// if we don't return this the browser could (edge does) cache the request
     }
 
     /**
@@ -82,10 +96,12 @@ public class GameRestController {
      * does not connect connections.
      */
     @RequestMapping(path = "refresh", method = RequestMethod.GET)
-    public ResponseEntity<Boolean> refreshGames() {
-        return ResponseEntity.ok()
-                .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
-                .body(gameService.refresh());
+    public ResponseEntity<String> refreshGames() {
+        gameService.refresh();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    private String escapeJsonString(String in) {
+        return gson.toJson(in);
+    }
 }

@@ -1,6 +1,7 @@
 package com.bnelson.triton.client;
 
 import com.bnelson.triton.client.service.GameRestService;
+import com.bnelson.triton.client.widget.AlertListWidget;
 import com.bnelson.triton.client.widget.GamePanel;
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.google.gwt.core.client.GWT;
@@ -17,6 +18,7 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Container;
 import org.gwtbootstrap3.client.ui.Row;
+import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 
 import java.util.List;
@@ -32,14 +34,16 @@ public class MainPanel extends Composite implements HasWidgets{
     private static final GameRestService gameRestService = GWT.create(GameRestService.class);
 
     @UiField Button refresh;
+    @UiField AlertListWidget alertListWidget;
     @UiField Row row;
+    @UiField Container externalLinks;
 
     @UiHandler("refresh")
     public void refreshButtonHandler(ClickEvent event){
         gameRestService.refreshGames(new MethodCallback<Boolean>() {
             @Override
             public void onFailure(Method method, Throwable exception) {
-                //todo failed
+                alertListWidget.addAlert("Refresh Games", exception.getMessage(), AlertType.DANGER);
             }
 
             @Override
@@ -60,15 +64,19 @@ public class MainPanel extends Composite implements HasWidgets{
         gameRestService.getGames(new MethodCallback<List<GameInfoRPC>>() {
             @Override
             public void onFailure(Method method, Throwable exception) {
-                //TODO show errors
-                System.out.println("something bad happened");
+                alertListWidget.addAlert("Get Games", exception.getMessage(), AlertType.DANGER);
             }
 
             @Override
             public void onSuccess(Method method, List<GameInfoRPC> response) {
                 for(GameInfoRPC game: response){
                     Column column = new Column(ColumnSize.LG_4, ColumnSize.MD_6, ColumnSize.SM_12);
-                    column.add(new GamePanel(gameRestService, game));
+                    column.add(new GamePanel(gameRestService, game, new OnAlert() {
+                        @Override
+                        public void alert(String strong, String details, AlertType type) {
+                            alertListWidget.addAlert(strong, details, type);
+                        }
+                    }));
                     row.add(column);
                 }
             }

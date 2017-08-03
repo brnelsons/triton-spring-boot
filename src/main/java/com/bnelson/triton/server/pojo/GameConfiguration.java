@@ -14,13 +14,16 @@ public class GameConfiguration implements Serializable {
     private final GameInfo gameInfo;
     private final ServerInfo serverInfo;
     private final List<Command> commands;
+    private final List<ExternalLink> externalLinks;
 
     public GameConfiguration(GameInfo gameInfo,
                              ServerInfo serverInfo,
-                             List<Command> commands) {
+                             List<Command> commands,
+                             List<ExternalLink> externalLinks) {
         this.gameInfo = gameInfo;
         this.serverInfo = serverInfo;
         this.commands = commands;
+        this.externalLinks = externalLinks;
     }
 
     public GameInfo getGameInfo() {
@@ -35,6 +38,10 @@ public class GameConfiguration implements Serializable {
         return commands;
     }
 
+    public List<ExternalLink> getExternalLinks() {
+        return externalLinks;
+    }
+
     public static Builder newBuilder(){
         return new Builder();
     }
@@ -44,9 +51,11 @@ public class GameConfiguration implements Serializable {
         private GameInfo gameInfo;
         private ServerInfo serverInfo;
         private List<Command> commands;
+        private List<ExternalLink> externalLinks;
 
         private Builder(){
             commands = new ArrayList<>();
+            externalLinks = new ArrayList<>();
         }
 
         public Builder setGameInfo(GameInfo gameInfo) {
@@ -64,6 +73,16 @@ public class GameConfiguration implements Serializable {
             return this;
         }
 
+        public Builder setLinks(List<ExternalLink> externalLinks) {
+            this.externalLinks = externalLinks;
+            return this;
+        }
+
+        public Builder addLink(ExternalLink externalLink) {
+            this.externalLinks.add(externalLink);
+            return this;
+        }
+
         public Builder addCommand(Command command) {
             this.commands.add(command);
             return this;
@@ -74,7 +93,7 @@ public class GameConfiguration implements Serializable {
             Preconditions.checkNotNull(serverInfo, "serverInfo cannot be null");
             Preconditions.checkArgument(!commands.isEmpty(), "commands cannot be empty");
 
-            return new GameConfiguration(gameInfo, serverInfo, commands);
+            return new GameConfiguration(gameInfo, serverInfo, commands, externalLinks);
         }
     }
 
@@ -87,7 +106,8 @@ public class GameConfiguration implements Serializable {
 
         if (gameInfo != null ? !gameInfo.equals(that.gameInfo) : that.gameInfo != null) return false;
         if (serverInfo != null ? !serverInfo.equals(that.serverInfo) : that.serverInfo != null) return false;
-        return commands != null ? commands.equals(that.commands) : that.commands == null;
+        if (commands != null ? !commands.equals(that.commands) : that.commands != null) return false;
+        return externalLinks != null ? externalLinks.equals(that.externalLinks) : that.externalLinks == null;
 
     }
 
@@ -96,6 +116,7 @@ public class GameConfiguration implements Serializable {
         int result = gameInfo != null ? gameInfo.hashCode() : 0;
         result = 31 * result + (serverInfo != null ? serverInfo.hashCode() : 0);
         result = 31 * result + (commands != null ? commands.hashCode() : 0);
+        result = 31 * result + (externalLinks != null ? externalLinks.hashCode() : 0);
         return result;
     }
 }

@@ -2,6 +2,7 @@ package com.bnelson.triton.client.widget;
 
 import com.bnelson.triton.shared.rpc.CommandInfoRPC;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -28,10 +29,11 @@ public class CommandGroup extends Composite{
         infoButtonMap = new HashMap<>();
     }
 
-    public void add(CommandInfoRPC commandInfoRPC){
+    public void add(CommandInfoRPC commandInfoRPC, ClickHandler clickHandler){
         CommandButton button = new CommandButton(commandInfoRPC);
         infoButtonMap.put(commandInfoRPC, button);
         buttons.add(button);
+        button.addClickHandler(clickHandler);
     }
 
     public void remove(CommandInfoRPC commandInfoRPC){
