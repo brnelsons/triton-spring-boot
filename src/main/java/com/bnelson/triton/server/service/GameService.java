@@ -79,9 +79,8 @@ public class GameService {
         if (isLocalProcess(gameId)) {
             String localProcessName = gameConfigDAO.getServerInfo(gameId).getLocalProcessName();
             BatchScriptRunner runner = new BatchScriptRunner(ScriptUtil.getIsProcessRunningString(localProcessName));
-            runner.run();
             OutputDelegate output = new OutputDelegate(100);
-            output.addOutput(runner.getOutput());
+            output.addOutput(runner.run());
             boolean isRunningLocally = ScriptUtil.isProcessRunningFromResult(output.read());
             if (isRunningLocally) {
                 return ConnectionStatusRPC.RUNNING;
@@ -95,7 +94,7 @@ public class GameService {
         return (Strings.isNullOrEmpty(serverInfo.getAddress())
                 || serverInfo.getAddress().contains("localhost")
                 || serverInfo.getAddress().contains("127.0.0.1"))
-                && Strings.isNullOrEmpty(serverInfo.getLocalProcessName());
+                && !Strings.isNullOrEmpty(serverInfo.getLocalProcessName());
     }
 
     public String getGameOutput(String gameId) {
@@ -109,16 +108,21 @@ public class GameService {
     public void runCommand(String gameId, String commandName) {
         Command command = gameConfigDAO.getCommandByName(gameId, commandName);
         OutputDelegate outputDelegate = gameIdOutputMap.get(gameId);
+        if (outputDelegate == null) {
+            outputDelegate = new OutputDelegate(10);
+            gameIdOutputMap.put(gameId, outputDelegate);
+        }
         switch (command.getType()) {
             case LOCAL_SCRIPT:
-                BatchScriptRunner batchScriptRunner = new BatchScriptRunner(command.getValue());
-                batchScriptRunner.run();
-                if (outputDelegate == null) {
-                    outputDelegate = new OutputDelegate(10);
-                    gameIdOutputMap.put(gameId, outputDelegate);
-                }
-                outputDelegate.addOutput(new SingleStringOutput("command is running..."));
-                outputDelegate.addOutput(batchScriptRunner.getOutput());
+                outputDelegate.addOutput(
+                        new SingleStringOutput("command is running..."),
+                        new BatchScriptRunner(command.getValue()).run());
+                break;
+            case KILL_PROCESS:
+                ServerInfo serverInfo = gameConfigDAO.getServerInfo(gameId);
+                outputDelegate.addOutput(
+                        new SingleStringOutput("command is running..."),
+                        new BatchScriptRunner(ScriptUtil.getKillCommand(serverInfo, serverInfo.getRequiresForceKill())).run());
                 break;
             default:
                 outputDelegate.addOutput(

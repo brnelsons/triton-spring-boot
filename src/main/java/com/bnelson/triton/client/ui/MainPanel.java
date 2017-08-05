@@ -1,8 +1,8 @@
-package com.bnelson.triton.client;
+package com.bnelson.triton.client.ui;
 
 import com.bnelson.triton.client.service.GameRestService;
-import com.bnelson.triton.client.widget.AlertListWidget;
-import com.bnelson.triton.client.widget.GamePanel;
+import com.bnelson.triton.client.ui.widget.AlertListWidget;
+import com.bnelson.triton.client.ui.widget.GamePanel;
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -21,12 +21,10 @@ import org.gwtbootstrap3.client.ui.Row;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
-/**
- * Created by brnel on 6/16/2017.
- */
 public class MainPanel extends Composite implements HasWidgets{
     interface MainPanelUiBinder extends UiBinder<Container, MainPanel> {}
 
@@ -37,6 +35,8 @@ public class MainPanel extends Composite implements HasWidgets{
     @UiField AlertListWidget alertListWidget;
     @UiField Row row;
     @UiField Container externalLinks;
+
+    private final List<GamePanel> gamePanels;
 
     @UiHandler("refresh")
     public void refreshButtonHandler(ClickEvent event){
@@ -55,12 +55,13 @@ public class MainPanel extends Composite implements HasWidgets{
 
     public MainPanel() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        gamePanels = new ArrayList<>();
         initGamePanels();
 
     }
 
     private void initGamePanels() {
-        row.clear();
+        clearGamePanels();
         gameRestService.getGames(new MethodCallback<List<GameInfoRPC>>() {
             @Override
             public void onFailure(Method method, Throwable exception) {
@@ -70,17 +71,27 @@ public class MainPanel extends Composite implements HasWidgets{
             @Override
             public void onSuccess(Method method, List<GameInfoRPC> response) {
                 for(GameInfoRPC game: response){
-                    Column column = new Column(ColumnSize.LG_4, ColumnSize.MD_6, ColumnSize.SM_12);
-                    column.add(new GamePanel(gameRestService, game, new OnAlert() {
+                    GamePanel panel = new GamePanel(gameRestService, game, new OnAlert() {
                         @Override
                         public void alert(String strong, String details, AlertType type) {
                             alertListWidget.addAlert(strong, details, type);
                         }
-                    }));
+                    });
+                    gamePanels.add(panel);
+                    Column column = new Column(ColumnSize.LG_4, ColumnSize.MD_6, ColumnSize.SM_12);
+                    column.add(panel);
                     row.add(column);
                 }
             }
         });
+    }
+
+    private void clearGamePanels() {
+        row.clear();
+        for(GamePanel panel : gamePanels){
+            panel.stop();
+        }
+        gamePanels.clear();
     }
 
     @Override

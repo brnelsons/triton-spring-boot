@@ -19,8 +19,10 @@ public class OutputDelegate {
         output = new StringBuilder("");
     }
 
-    public void addOutput(Output out){
-        outputQueue.offer(out);
+    public void addOutput(Output... out){
+        for(Output o : out) {
+            outputQueue.offer(o);
+        }
     }
 
     public String read(){

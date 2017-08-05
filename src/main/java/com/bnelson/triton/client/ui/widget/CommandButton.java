@@ -1,9 +1,8 @@
-package com.bnelson.triton.client.widget;
+package com.bnelson.triton.client.ui.widget;
 
 import com.bnelson.triton.shared.rpc.CommandInfoRPC;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;

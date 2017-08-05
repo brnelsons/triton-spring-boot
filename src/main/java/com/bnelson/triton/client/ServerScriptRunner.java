@@ -1,5 +1,10 @@
 package com.bnelson.triton.client;
 
+import com.bnelson.triton.client.place.LoginPlace;
+import com.bnelson.triton.client.place.SimplePlace;
+import com.bnelson.triton.client.place.SimplePlaceChanger;
+import com.bnelson.triton.client.ui.MainPanel;
+import com.bnelson.triton.client.ui.widget.LoginPanel;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -15,6 +20,14 @@ public class ServerScriptRunner implements EntryPoint {
      */
     public void onModuleLoad() {
         useCorrectRequestBaseUrl();
+//        SimplePlaceChanger placeChanger = new SimplePlaceChanger(new SimplePlaceChanger.PlaceChangeHandler() {
+//            @Override
+//            public void onChange(SimplePlace place) {
+//                RootPanel.get().clear();
+//                RootPanel.get().add(place.getComposite());
+//            }
+//        });
+//        placeChanger.changePlace(new MainPanel());
         RootPanel.get().add(new MainPanel());
     }
 

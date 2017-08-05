@@ -1,4 +1,4 @@
-package com.bnelson.triton.client.widget;
+package com.bnelson.triton.client.ui.widget;
 
 import com.google.gwt.user.client.ui.Composite;
 

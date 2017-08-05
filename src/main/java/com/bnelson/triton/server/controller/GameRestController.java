@@ -31,7 +31,8 @@ public class GameRestController {
     /**
      * **** Get All Games ****
      */
-    @RequestMapping(path = "all", method = RequestMethod.GET)
+//    @RequestMapping(path = "all", method = RequestMethod.GET)
+    @GetMapping("all")
     public ResponseEntity<List<GameInfoRPC>> getGames() {
         final List<GameInfoRPC> games = gameService.getAllGames();
         return ResponseEntity.ok()
@@ -42,7 +43,8 @@ public class GameRestController {
     /**
      * **** Get Status for Game ****
      */
-    @RequestMapping(path = "status", method = RequestMethod.GET)
+//    @RequestMapping(path = "status", method = RequestMethod.GET)
+    @GetMapping("status")
     public ResponseEntity<ConnectionStatusRPC> getGameStatus(@RequestParam(value = "gameId", required = true) String gameId) {
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
@@ -52,7 +54,8 @@ public class GameRestController {
     /**
      * **** Get All Commands for Game ****
      */
-    @RequestMapping(path = "commands", method = RequestMethod.GET)
+//    @RequestMapping(path = "commands", method = RequestMethod.GET)
+    @GetMapping("commands")
     public ResponseEntity<List<CommandInfoRPC>> getGameCommands(@RequestParam(value = "gameId", required = true) String gameId) {
         final List<CommandInfoRPC> games = gameService.getCommands(gameId);
         return ResponseEntity.ok()
@@ -63,7 +66,8 @@ public class GameRestController {
     /**
      * **** Get All External Links for Game ****
      */
-    @RequestMapping(path = "externalLinks", method = RequestMethod.GET)
+//    @RequestMapping(path = "externalLinks", method = RequestMethod.GET)
+    @GetMapping("externalLinks")
     public ResponseEntity<List<ExternalLinkRPC>> getExternalLinks(@RequestParam(value = "gameId", required = true) String gameId) {
         final List<ExternalLinkRPC> games = gameService.getExternalLinks(gameId);
         return ResponseEntity.ok()
@@ -74,7 +78,8 @@ public class GameRestController {
     /**
      * **** Get Connection output for game ****
      */
-    @RequestMapping(path = "output", method = RequestMethod.GET)
+//    @RequestMapping(path = "output", method = RequestMethod.GET)
+    @GetMapping("output")
     public ResponseEntity<String> getGameOutput(@RequestParam(value = "gameId", required = true) String gameId) {
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
@@ -84,7 +89,8 @@ public class GameRestController {
     /**
      * **** Run command for game ****
      */
-    @RequestMapping(path = "commands/run", method = RequestMethod.POST)
+//    @RequestMapping(path = "commands/run", method = RequestMethod.POST)
+    @PostMapping("commands/run")
     public ResponseEntity<String> runCommand(@RequestParam(value = "gameId", required = true) String gameId,
                                              @RequestParam(value = "commandName", required = true) String commandName) {
         gameService.runCommand(gameId, commandName);
@@ -95,7 +101,8 @@ public class GameRestController {
      * **** refresh configs and connections****
      * does not connect connections.
      */
-    @RequestMapping(path = "refresh", method = RequestMethod.GET)
+//    @RequestMapping(path = "refresh", method = RequestMethod.GET)
+    @GetMapping("refresh")
     public ResponseEntity<String> refreshGames() {
         gameService.refresh();
         return new ResponseEntity<>(HttpStatus.OK);

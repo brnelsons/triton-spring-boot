@@ -12,6 +12,7 @@
 
     <inherits name="org.gwtbootstrap3.GwtBootstrap3"/>
     <inherits name="com.google.gwt.place.Place"/>
+    <inherits name="com.google.gwt.inject.Inject"/>
 
     <!-- Specify the app entry point class.                   -->
     <entry-point class='com.bnelson.triton.client.ServerScriptRunner'/>

@@ -1,4 +1,4 @@
-package com.bnelson.triton.client;
+package com.bnelson.triton.client.ui;
 
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 

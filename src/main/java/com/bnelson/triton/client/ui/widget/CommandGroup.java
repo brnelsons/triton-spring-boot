@@ -1,4 +1,4 @@
-package com.bnelson.triton.client.widget;
+package com.bnelson.triton.client.ui.widget;
 
 import com.bnelson.triton.shared.rpc.CommandInfoRPC;
 import com.google.gwt.core.client.GWT;

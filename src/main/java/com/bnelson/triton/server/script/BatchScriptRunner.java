@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 /**
  * Created by brnel on 7/21/2017.
  */
-public class BatchScriptRunner implements Runnable {
+public class BatchScriptRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BatchScriptRunner.class);
 
@@ -24,8 +24,7 @@ public class BatchScriptRunner implements Runnable {
         this.command = command;
     }
 
-    @Override
-    public void run() {
+    public OutputDelegate.Output run() {
         ProcessBuilder pb = ScriptUtil.getProcessBuilder(command);
         pb.redirectInput();
         pb.redirectOutput();
@@ -37,11 +36,6 @@ public class BatchScriptRunner implements Runnable {
         } catch (IOException e) {
             LOGGER.error("something bad happened while running the script {}" ,command, e);
         }
-    }
-
-    public OutputDelegate.Output getOutput(){
         return new OutputReader(input);
     }
-
-
 }

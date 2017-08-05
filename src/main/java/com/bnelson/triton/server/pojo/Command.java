@@ -12,7 +12,8 @@ public class Command implements Serializable {
 
     public enum Type{
         LOCAL_SCRIPT,
-        TELNET
+        TELNET,
+        KILL_PROCESS
     }
 
     private final String name;

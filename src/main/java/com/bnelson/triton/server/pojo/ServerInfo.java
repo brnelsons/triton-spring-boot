@@ -11,15 +11,18 @@ public class ServerInfo implements Serializable {
     private final String password;
     private final String address;
     private final String localProcessName;
-    private final int port;
+    private final Boolean requiresForceKill;
+    private final Integer port;
 
     public ServerInfo(String username,
                       String password,
                       String address,
-                      int port,
+                      Integer port,
+                      Boolean requiresForceKill,
                       String localProcessName) {
         this.username = username;
         this.password = password;
+        this.requiresForceKill = requiresForceKill;
         this.localProcessName = localProcessName;
         this.address = address;
         this.port = port;
@@ -41,6 +44,10 @@ public class ServerInfo implements Serializable {
         return localProcessName;
     }
 
+    public Boolean getRequiresForceKill() {
+        return requiresForceKill;
+    }
+
     public int getPort() {
         return port;
     }
@@ -55,6 +62,7 @@ public class ServerInfo implements Serializable {
         private String password;
         private String address;
         private String localProcessName;
+        private Boolean requiresForceKill;
         private int port;
 
         private Builder(){}
@@ -77,8 +85,14 @@ public class ServerInfo implements Serializable {
             this.address = address;
             return this;
         }
+
         public Builder setLocalProcessName(String localProcessName) {
             this.localProcessName = localProcessName;
+            return this;
+        }
+
+        public Builder setRequiresForceKill(Boolean requiresForceKill) {
+            this.requiresForceKill = requiresForceKill;
             return this;
         }
 
@@ -86,7 +100,7 @@ public class ServerInfo implements Serializable {
             if(address == null && localProcessName == null){
                 throw new IllegalArgumentException("address OR localProcessName must be provided!");
             }
-            return new ServerInfo(username, password, address, port, localProcessName);
+            return new ServerInfo(username, password, address, port, requiresForceKill, localProcessName);
         }
     }
 

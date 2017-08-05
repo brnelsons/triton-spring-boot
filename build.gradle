@@ -26,6 +26,7 @@ sourceSets {
 dependencies {
     compileOnly('com.google.gwt:gwt-user:2.8.1')
     compileOnly('com.google.gwt:gwt-dev:2.8.1')
+    compileOnly('com.google.gwt.inject:gin:2.1.2')
     compileOnly('org.fusesource.restygwt:restygwt:2.2.0')
     compileOnly('org.springframework.boot:spring-boot-configuration-processor')
     compileOnly('org.gwtbootstrap3:gwtbootstrap3:0.9.4')

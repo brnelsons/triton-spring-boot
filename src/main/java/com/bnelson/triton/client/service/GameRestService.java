@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import java.util.List;
 
+@SuppressWarnings("VoidMethodAnnotatedWithGET")
 @Path("/rest/game")
 public interface GameRestService extends RestService {
 

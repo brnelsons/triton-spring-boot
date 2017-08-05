@@ -1,6 +1,6 @@
-package com.bnelson.triton.client.widget;
+package com.bnelson.triton.client.ui.widget;
 
-import com.bnelson.triton.client.OnAlert;
+import com.bnelson.triton.client.ui.OnAlert;
 import com.bnelson.triton.client.service.GameRestService;
 import com.bnelson.triton.shared.rpc.CommandInfoRPC;
 import com.bnelson.triton.shared.rpc.ConnectionStatusRPC;
@@ -20,19 +20,17 @@ import org.gwtbootstrap3.client.ui.constants.AlertType;
 import java.util.List;
 import java.util.logging.Logger;
 
-/**
- * Created by brnel on 6/15/2017.
- */
 public class GamePanel extends Composite {
     interface GamePanelUiBinder extends UiBinder<Panel, GamePanel> {}
+    private static GamePanelUiBinder ourUiBinder = GWT.create(GamePanelUiBinder.class);
 
     private static final Logger LOGGER = Logger.getLogger("GamePanel");
-
-    private static GamePanelUiBinder ourUiBinder = GWT.create(GamePanelUiBinder.class);
 
     private final GameRestService gameService;
     private final GameInfoRPC game;
     private final OnAlert onAlert;
+
+    private boolean run;
 
     @UiField Panel panel;
     @UiField Label name;
@@ -48,7 +46,7 @@ public class GamePanel extends Composite {
         this.onAlert = onAlert;
         this.game = game;
         this.name.setText(game.getName());
-
+        this.run = true;
         gameService.getGameCommands(game.getId(), new MethodCallback<List<CommandInfoRPC>>() {
             @Override
             public void onFailure(Method method, Throwable exception) {
@@ -60,7 +58,6 @@ public class GamePanel extends Composite {
                 updateCommandButtons(response);
             }
         });
-
         //set update schedule
         Scheduler.get().scheduleFixedDelay(() -> {
             gameService.getGameStatus(
@@ -89,7 +86,7 @@ public class GamePanel extends Composite {
                             handleConnectionOutput(response);
                         }
                     });
-            return true;
+            return run;
         }, 5000);
     }
 
@@ -135,6 +132,10 @@ public class GamePanel extends Composite {
                     stopLight.setLight(StopLight.Light.BLACK);
             }
         }
+    }
+
+    public void stop(){
+        this.run = false;
     }
 
     private void lockAllButtons() {

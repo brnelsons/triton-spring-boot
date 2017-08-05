@@ -1,5 +1,8 @@
 package com.bnelson.triton.server.script;
 
+import com.bnelson.triton.server.pojo.GameInfo;
+import com.bnelson.triton.server.pojo.ServerInfo;
+
 /**
  * Created by brnel on 7/31/2017.
  */
@@ -47,6 +50,14 @@ public class ScriptUtil {
             return new ProcessBuilder("cmd", "/c", command);
         }else{
             return new ProcessBuilder("bash", "-c", command);
+        }
+    }
+
+    public static String getKillCommand(ServerInfo serverInfo, Boolean force){
+        if(isWindows()) {
+            return "taskkill "+(force == null || force ? "/f /im " : "/im ") + serverInfo.getLocalProcessName();
+        }else{
+            throw new UnsupportedOperationException("cant run kill commands on this OS yet!");
         }
     }
 }
