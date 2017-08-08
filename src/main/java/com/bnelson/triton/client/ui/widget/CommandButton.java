@@ -23,11 +23,19 @@ public class CommandButton extends Composite {
 
     public CommandButton(CommandInfoRPC commandInfoRPC) {
         initWidget(ourUiBinder.createAndBindUi(this));
-        button.setText(commandInfoRPC.getName());
+        button.setText(commandInfoRPC.getName().name());
     }
 
     public void addClickHandler(ClickHandler clickHandler){
          button.addClickHandler(clickHandler);
+    }
+
+    public void enable(){
+        button.setEnabled(true);
+    }
+
+    public void disable(){
+        button.setEnabled(false);
     }
 
 }

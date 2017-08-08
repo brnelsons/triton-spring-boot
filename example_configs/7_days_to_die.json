@@ -1,0 +1,31 @@
+{
+  "gameInfo": {
+    "name": "7 Days to Die",
+    "description": "Zombie Survival."
+  },
+  "serverInfo": {
+    "localProcessName": "7DaysToDieServer.exe",
+    "address": "127.0.0.1",
+    "port": "23"
+  },
+  "commands": [
+    {
+      "name": "START",
+      "type": "LOCAL_SCRIPT",
+      "description": "Starts the server",
+      "value": "E:\\Games\\steamcmd\\steamapps\\7daystodie\\startdedicated.bat"
+    },
+    {
+      "name": "UPDATE",
+      "type": "LOCAL_SCRIPT",
+      "description": "Updates the server",
+      "value": "E:\\Games\\steamcmd\\steamapps\\update_7_days_to_die.bat"
+    },
+    {
+      "name": "STOP",
+      "type": "KILL_PROCESS",
+      "requiresForceKill": "false",
+      "description": "Kills the process"
+    }
+  ]
+}

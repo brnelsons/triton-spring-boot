@@ -1,11 +1,7 @@
 package com.bnelson.triton.server.script;
 
-import com.bnelson.triton.server.pojo.GameInfo;
 import com.bnelson.triton.server.pojo.ServerInfo;
 
-/**
- * Created by brnel on 7/31/2017.
- */
 public class ScriptUtil {
     private ScriptUtil(){}
 
@@ -13,7 +9,7 @@ public class ScriptUtil {
 
     public static String getIsProcessRunningString(String processName){
         if(isWindows()) {
-            return "QPROCESS " + processName;
+            return "tasklist /FI \"IMAGENAME eq "+processName+"\"";
         }else{
             return "";
         }
@@ -24,7 +20,9 @@ public class ScriptUtil {
      */
     public static boolean isProcessRunningFromResult(String processResult){
         if(isWindows()) {
-            return !processResult.isEmpty() && !processResult.startsWith("No Process exists for");
+            return !processResult.isEmpty()
+                    && !processResult.contains("No Process exists for")
+                    && !processResult.contains("INFO: No tasks are running which match the specified criteria.");
         }else if(isUnix()){
             return false;
         }else if(isMac()){
@@ -53,7 +51,8 @@ public class ScriptUtil {
         }
     }
 
-    public static String getKillCommand(ServerInfo serverInfo, Boolean force){
+    public static String getKillCommand(ServerInfo serverInfo){
+        Boolean force = serverInfo.getRequiresForceKill();
         if(isWindows()) {
             return "taskkill "+(force == null || force ? "/f /im " : "/im ") + serverInfo.getLocalProcessName();
         }else{

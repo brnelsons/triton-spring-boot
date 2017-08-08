@@ -95,7 +95,7 @@ compileJava.dependsOn(processResources)
 
 jar.dependsOn compileGwt
 jar {
-    baseName = 'spring-boot-gwt'
+    baseName = 'triton-game-manager'
     version = '1.0.0'
 
     into('static') {

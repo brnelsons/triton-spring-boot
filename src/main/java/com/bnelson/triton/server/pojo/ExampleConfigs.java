@@ -23,7 +23,7 @@ public class ExampleConfigs {
                                 .build())
                 .addCommand(
                         Command.newBuilder()
-                                .setName("Start")
+                                .setName(Command.Name.START)
                                 .setType(Command.Type.LOCAL_SCRIPT)
                                 .setDescription("Starts the server")
                                 .setValue("cmd /c \"C:\\\\Commands\\start_server.bat\"")

@@ -1,0 +1,29 @@
+{
+  "gameInfo": {
+    "name": "Citadel: Forged in Fire",
+    "description": "Magic Survival."
+  },
+  "serverInfo": {
+    "localProcessName": "CitadelServer.exe"
+  },
+  "commands": [
+    {
+      "name": "Start",
+      "type": "LOCAL_SCRIPT",
+      "description": "Starts the server",
+      "value": "E:\\Games\\steamcmd\\steamapps\\citadel\\start_citadel.bat"
+    },
+    {
+      "name": "Update",
+      "type": "LOCAL_SCRIPT",
+      "description": "Updates the server",
+      "value": "E:\\Games\\steamcmd\\steamapps\\update_citadel.bat"
+    },
+    {
+      "name": "Kill",
+      "type": "KILL_PROCESS",
+      "requiresForceKill": "true",
+      "description": "Kills the process"
+    }
+  ]
+}

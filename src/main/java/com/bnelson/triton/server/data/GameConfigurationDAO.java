@@ -69,7 +69,7 @@ public class GameConfigurationDAO {
     public Command getCommandByName(String gameId, String commandName) {
         List<Command> commands = gameIdCommandMap.get(gameId);
         for (Command cmd : commands) {
-            if (cmd.getName().equals(commandName)) {
+            if (cmd.getName().name().equals(commandName)) {
                 return cmd;
             }
         }

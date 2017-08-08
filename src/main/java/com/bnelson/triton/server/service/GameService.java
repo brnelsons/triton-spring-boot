@@ -76,8 +76,9 @@ public class GameService {
     }
 
     public ConnectionStatusRPC getServerStatus(String gameId) {
-        if (isLocalProcess(gameId)) {
-            String localProcessName = gameConfigDAO.getServerInfo(gameId).getLocalProcessName();
+        ServerInfo serverInfo = gameConfigDAO.getServerInfo(gameId);
+        if (GameUtil.isLocalProcess(serverInfo)) {
+            String localProcessName = serverInfo.getLocalProcessName();
             BatchScriptRunner runner = new BatchScriptRunner(ScriptUtil.getIsProcessRunningString(localProcessName));
             OutputDelegate output = new OutputDelegate(100);
             output.addOutput(runner.run());
@@ -87,14 +88,6 @@ public class GameService {
             }
         }
         return connectionManager.getConnectionStatus(gameId);
-    }
-
-    private boolean isLocalProcess(String gameId) {
-        ServerInfo serverInfo = gameConfigDAO.getServerInfo(gameId);
-        return (Strings.isNullOrEmpty(serverInfo.getAddress())
-                || serverInfo.getAddress().contains("localhost")
-                || serverInfo.getAddress().contains("127.0.0.1"))
-                && !Strings.isNullOrEmpty(serverInfo.getLocalProcessName());
     }
 
     public String getGameOutput(String gameId) {
@@ -122,7 +115,7 @@ public class GameService {
                 ServerInfo serverInfo = gameConfigDAO.getServerInfo(gameId);
                 outputDelegate.addOutput(
                         new SingleStringOutput("command is running..."),
-                        new BatchScriptRunner(ScriptUtil.getKillCommand(serverInfo, serverInfo.getRequiresForceKill())).run());
+                        new BatchScriptRunner(ScriptUtil.getKillCommand(serverInfo)).run());
                 break;
             default:
                 outputDelegate.addOutput(

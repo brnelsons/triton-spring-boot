@@ -1,0 +1,1 @@
+java -Dlogging.level.com.bnelson.triton=INFO -jar triton-game-manager-1.0.0.jar

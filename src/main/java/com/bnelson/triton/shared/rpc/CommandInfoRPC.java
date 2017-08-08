@@ -1,17 +1,14 @@
 package com.bnelson.triton.shared.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Objects;
-
 import java.io.Serializable;
 
-/**
- * Created by bnelson on 7/21/2017.
- */
-@SuppressWarnings("GwtInconsistentSerializableClass")
 public class CommandInfoRPC implements Serializable{
 
-    private String name;
+    public enum Name{
+        START, UPDATE, STOP, KILL, OTHER
+    }
+
+    private Name name;
     private String description;
 
     /**
@@ -19,11 +16,11 @@ public class CommandInfoRPC implements Serializable{
      */
     public CommandInfoRPC() {}
 
-    public String getName() {
+    public Name getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(Name name) {
         this.name = name;
     }
 

@@ -5,10 +5,11 @@ import com.google.common.base.Preconditions;
 
 import java.io.Serializable;
 
-/**
- * Created by brnel on 7/20/2017.
- */
 public class Command implements Serializable {
+
+    public enum Name{
+        START, UPDATE, STOP, KILL, OTHER
+    }
 
     public enum Type{
         LOCAL_SCRIPT,
@@ -16,19 +17,19 @@ public class Command implements Serializable {
         KILL_PROCESS
     }
 
-    private final String name;
+    private final Name name;
     private final Type type;
     private final String description;
     private final String value;
 
-    public Command(String name, Type type, String description, String value) {
+    public Command(Name name, Type type, String description, String value) {
         this.name = name;
         this.type = type;
         this.description = description;
         this.value = value;
     }
 
-    public String getName() {
+    public Name getName() {
         return name;
     }
 
@@ -50,14 +51,14 @@ public class Command implements Serializable {
 
     public static class Builder{
 
-        private String name;
+        private Name name;
         private Type type;
         private String description;
         private String value;
 
         private Builder(){}
 
-        public Builder setName(String name) {
+        public Builder setName(Name name) {
             this.name = name;
             return this;
         }

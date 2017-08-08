@@ -40,7 +40,7 @@ public class ConversionUtil {
 
     public static CommandInfoRPC convert(Command command) {
         CommandInfoRPC infoRPC = new CommandInfoRPC();
-        infoRPC.setName(command.getName());
+        infoRPC.setName(CommandInfoRPC.Name.valueOf(command.getName().name()));
         infoRPC.setDescription(command.getDescription());
         return infoRPC;
     }

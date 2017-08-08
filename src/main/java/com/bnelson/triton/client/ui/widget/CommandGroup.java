@@ -44,4 +44,30 @@ public class CommandGroup extends Composite{
     public void clear(){
         buttons.clear();
     }
+
+    public void enable(CommandInfoRPC infoRPC) {
+        infoButtonMap.get(infoRPC).enable();
+    }
+
+    public void enableAll(){
+        infoButtonMap.values().forEach(CommandButton::enable);
+    }
+
+    public void enableAllBut(CommandInfoRPC infoRPC){
+        infoButtonMap.values().forEach(CommandButton::enable);
+        infoButtonMap.get(infoRPC).enable();
+    }
+
+    public void disableAll(){
+        infoButtonMap.values().forEach(CommandButton::disable);
+    }
+
+    public void disableAllBut(CommandInfoRPC infoRPC){
+        infoButtonMap.values().forEach(CommandButton::disable);
+        infoButtonMap.get(infoRPC).enable();
+    }
+
+    public void disable(CommandInfoRPC infoRPC) {
+        infoButtonMap.get(infoRPC).disable();
+    }
 }

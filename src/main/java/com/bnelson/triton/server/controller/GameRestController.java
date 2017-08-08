@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Created by bnelson on 7/20/2017.
- */
 @SuppressWarnings("unused")
 @RestController
 @RequestMapping("/rest/game")
@@ -34,10 +31,9 @@ public class GameRestController {
 //    @RequestMapping(path = "all", method = RequestMethod.GET)
     @GetMapping("all")
     public ResponseEntity<List<GameInfoRPC>> getGames() {
-        final List<GameInfoRPC> games = gameService.getAllGames();
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
-                .body(games);
+                .body(gameService.getAllGames());
     }
 
     /**
@@ -57,10 +53,9 @@ public class GameRestController {
 //    @RequestMapping(path = "commands", method = RequestMethod.GET)
     @GetMapping("commands")
     public ResponseEntity<List<CommandInfoRPC>> getGameCommands(@RequestParam(value = "gameId", required = true) String gameId) {
-        final List<CommandInfoRPC> games = gameService.getCommands(gameId);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
-                .body(games);
+                .body(gameService.getCommands(gameId));
     }
 
     /**
@@ -69,10 +64,9 @@ public class GameRestController {
 //    @RequestMapping(path = "externalLinks", method = RequestMethod.GET)
     @GetMapping("externalLinks")
     public ResponseEntity<List<ExternalLinkRPC>> getExternalLinks(@RequestParam(value = "gameId", required = true) String gameId) {
-        final List<ExternalLinkRPC> games = gameService.getExternalLinks(gameId);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noCache()) // if we don't return this the browser could (edge does) cache the request
-                .body(games);
+                .body(gameService.getExternalLinks(gameId));
     }
 
     /**

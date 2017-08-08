@@ -17,11 +17,15 @@ import org.fusesource.restygwt.client.MethodCallback;
 import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class GamePanel extends Composite {
-    interface GamePanelUiBinder extends UiBinder<Panel, GamePanel> {}
+    interface GamePanelUiBinder extends UiBinder<Panel, GamePanel> {
+    }
+
     private static GamePanelUiBinder ourUiBinder = GWT.create(GamePanelUiBinder.class);
 
     private static final Logger LOGGER = Logger.getLogger("GamePanel");
@@ -30,7 +34,9 @@ public class GamePanel extends Composite {
     private final GameInfoRPC game;
     private final OnAlert onAlert;
 
+    private ConnectionStatusRPC state;
     private boolean run;
+    private Map<CommandInfoRPC.Name, CommandInfoRPC> commandInfoRPCMap;
 
     @UiField Panel panel;
     @UiField Label name;
@@ -47,6 +53,7 @@ public class GamePanel extends Composite {
         this.game = game;
         this.name.setText(game.getName());
         this.run = true;
+        commandInfoRPCMap = new HashMap<>();
         gameService.getGameCommands(game.getId(), new MethodCallback<List<CommandInfoRPC>>() {
             @Override
             public void onFailure(Method method, Throwable exception) {
@@ -59,6 +66,7 @@ public class GamePanel extends Composite {
             }
         });
         //set update schedule
+        commandGroup.disableAll();
         Scheduler.get().scheduleFixedDelay(() -> {
             gameService.getGameStatus(
                     game.getId(),
@@ -97,18 +105,21 @@ public class GamePanel extends Composite {
     private void updateCommandButtons(List<CommandInfoRPC> response) {
         commandGroup.clear();
         for (final CommandInfoRPC infoRPC : response) {
+            commandInfoRPCMap.put(infoRPC.getName(), infoRPC);
             commandGroup.add(infoRPC, new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    gameService.runCommand(game.getId(), infoRPC.getName(), new MethodCallback<String>() {
+                    commandGroup.disable(infoRPC);
+                    gameService.runCommand(game.getId(), infoRPC.getName().name(), new MethodCallback<String>() {
                         @Override
                         public void onFailure(Method method, Throwable exception) {
                             onAlert.alert("Run Command " + game.getName(), exception.getMessage(), AlertType.DANGER);
+                            commandGroup.enable(infoRPC);
                         }
 
                         @Override
                         public void onSuccess(Method method, String response) {
-                            //no op
+                            commandGroup.enable(infoRPC);
                         }
                     });
                 }
@@ -120,24 +131,25 @@ public class GamePanel extends Composite {
         if (response != null) {
             switch (response) {
                 case RUNNING:
+                    commandGroup.disableAllBut(commandInfoRPCMap.get(CommandInfoRPC.Name.STOP));
                     stopLight.setLight(StopLight.Light.GREEN);
                     break;
                 case STOPPED:
+                    commandGroup.enableAllBut(commandInfoRPCMap.get(CommandInfoRPC.Name.STOP));
                     stopLight.setLight(StopLight.Light.RED);
                     break;
                 case UNKNOWN:
+                    commandGroup.enableAll();
                     stopLight.setLight(StopLight.Light.YELLOW);
                     break;
                 default:
+                    commandGroup.enableAll();
                     stopLight.setLight(StopLight.Light.BLACK);
             }
         }
     }
 
-    public void stop(){
+    public void stop() {
         this.run = false;
-    }
-
-    private void lockAllButtons() {
     }
 }

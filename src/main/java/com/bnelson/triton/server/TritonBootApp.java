@@ -4,9 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-/**
- * Created by brnel on 7/19/2017.
- */
 @SpringBootApplication
 @EnableScheduling
 public class TritonBootApp {
