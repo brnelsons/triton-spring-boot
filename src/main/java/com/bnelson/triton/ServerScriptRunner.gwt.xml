@@ -13,9 +13,14 @@
     <inherits name="org.gwtbootstrap3.GwtBootstrap3"/>
     <inherits name="com.google.gwt.place.Place"/>
     <inherits name="com.google.gwt.inject.Inject"/>
+    <inherits name="com.google.gwt.activity.Activity"/>
+
+    <replace-with class="com.bnelson.triton.client.ClientFactoryImpl">
+        <when-type-is class="com.bnelson.triton.client.ClientFactory"/>
+    </replace-with>
 
     <!-- Specify the app entry point class.                   -->
-    <entry-point class='com.bnelson.triton.client.ServerScriptRunner'/>
+    <entry-point class='com.bnelson.triton.client.TritonApp'/>
 
 
     <!-- Specify the app servlets.                   -->

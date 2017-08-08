@@ -81,7 +81,7 @@ public class GameConfigurationDAO {
             String configLocation = environment.getProperty(CONFIG_LOC_PROPERTY, DEFAULT_CONFIG_DIR);
             Preconditions.checkNotNull(
                     configLocation,
-                    CONFIG_LOC_PROPERTY + " was not found, please provide using --config.dir=/Users/<user-name>/Documents/Triton-Configs/");
+                    CONFIG_LOC_PROPERTY + " was not found, please provide using --config.dir=/Users/<user-name>/Documents/TritonApp-Configs/");
             File configFile = new File(configLocation);
             if (!FileReaderWriterUtil.exists(configFile, true)
                     || configFile.list().length == 0) {

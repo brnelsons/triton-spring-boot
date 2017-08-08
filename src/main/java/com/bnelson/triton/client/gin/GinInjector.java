@@ -7,7 +7,7 @@ import com.google.gwt.inject.client.Ginjector;
 import com.google.inject.Injector;
 
 /**
- * Created by brnel on 8/4/2017.
+ * TODO enable gin injection
  */
 @GinModules(GinModule.class)
 public interface GinInjector extends Ginjector {

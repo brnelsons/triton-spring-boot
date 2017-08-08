@@ -1,12 +1,10 @@
-package com.bnelson.triton.client.ui.widget;
+package com.bnelson.triton.client.mvp.view;
 
-import com.bnelson.triton.client.place.GamePlace;
-import com.bnelson.triton.client.place.SimplePlaceChanger;
+import com.bnelson.triton.client.mvp.place.GameManagerPlace;
 import com.bnelson.triton.client.service.LoginRestService;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -18,23 +16,18 @@ import org.gwtbootstrap3.client.ui.Container;
 import org.gwtbootstrap3.client.ui.Input;
 import org.gwtbootstrap3.client.ui.TextBox;
 
-/**
- * Created by brnel on 8/4/2017.
- */
-public class LoginPanel extends Composite{
-    interface LoginPanelUiBinder extends UiBinder<Container, LoginPanel> {}
-    private static LoginPanelUiBinder ourUiBinder = GWT.create(LoginPanelUiBinder.class);
+public class LoginView extends Composite{
+    interface LoginViewUiBinder extends UiBinder<Container, LoginView> {}
 
+    private static LoginViewUiBinder ourUiBinder = GWT.create(LoginViewUiBinder.class);
     private static final LoginRestService loginRestService = GWT.create(LoginRestService.class);
 
-    private final SimplePlaceChanger placeChanger;
+    private final PlaceController placeController;
 
-    @UiField
-    TextBox username;
-    @UiField
-    Input password;
-    @UiField
-    Button loginButton;
+    @UiField Container container;
+    @UiField TextBox username;
+    @UiField Input password;
+    @UiField Button loginButton;
 
     @UiHandler("loginButton")
     public void loginButton(ClickEvent e){
@@ -50,14 +43,16 @@ public class LoginPanel extends Composite{
                     @Override
                     public void onSuccess(Method method, Boolean response) {
                         if(response){
-                            placeChanger.changePlace(new GamePlace());
+                            placeController.goTo(new GameManagerPlace());
+                        }else{
+                            password.setText("");
                         }
                     }
                 });
     }
 
-    public LoginPanel(SimplePlaceChanger placeChanger) {
-        this.placeChanger = placeChanger;
+    public LoginView(PlaceController placeController) {
+        this.placeController = placeController;
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 }

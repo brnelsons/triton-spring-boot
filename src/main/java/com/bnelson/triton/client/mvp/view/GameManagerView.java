@@ -1,8 +1,9 @@
-package com.bnelson.triton.client.ui;
+package com.bnelson.triton.client.mvp.view;
 
+import com.bnelson.triton.client.ui.OnAlert;
+import com.bnelson.triton.client.ui.widget.GamePanel;
 import com.bnelson.triton.client.service.GameRestService;
 import com.bnelson.triton.client.ui.widget.AlertListWidget;
-import com.bnelson.triton.client.ui.widget.GamePanel;
 import com.bnelson.triton.shared.rpc.GameInfoRPC;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
-public class MainPanel extends Composite implements HasWidgets{
-    interface MainPanelUiBinder extends UiBinder<Container, MainPanel> {}
+public class GameManagerView extends Composite implements HasWidgets{
+    interface MainPanelUiBinder extends UiBinder<Container, GameManagerView> {}
 
     private static MainPanelUiBinder ourUiBinder = GWT.create(MainPanelUiBinder.class);
     private static final GameRestService gameRestService = GWT.create(GameRestService.class);
@@ -53,7 +54,7 @@ public class MainPanel extends Composite implements HasWidgets{
         });
     }
 
-    public MainPanel() {
+    public GameManagerView() {
         initWidget(ourUiBinder.createAndBindUi(this));
         gamePanels = new ArrayList<>();
         initGamePanels();
